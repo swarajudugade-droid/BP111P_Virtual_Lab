@@ -1,0 +1,673 @@
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>BP111P Virtual Lab</title>
+<style>
+:root{--bg:#f4f6f3;--pn:#fff;--ink:#17211c;--mut:#5b675f;--ln:#d9e0d9;--ac:#0f766e;--acx:#fff;--soft:#e4f2ef;--ok:#15803d;--bad:#b91c1c;--warn:#a16207;--wsoft:#fef3c7;--bsoft:#fee2e2;--gsoft:#dcfce7}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121715;--pn:#1b2220;--ink:#e8efe9;--mut:#9aa8a0;--ln:#2e3935;--ac:#2dd4bf;--acx:#06201c;--soft:#173532;--ok:#4ade80;--bad:#f87171;--warn:#fbbf24;--wsoft:#3a2f10;--bsoft:#3b1717;--gsoft:#12301d}}
+:root[data-theme="dark"]{--bg:#121715;--pn:#1b2220;--ink:#e8efe9;--mut:#9aa8a0;--ln:#2e3935;--ac:#2dd4bf;--acx:#06201c;--soft:#173532;--ok:#4ade80;--bad:#f87171;--warn:#fbbf24;--wsoft:#3a2f10;--bsoft:#3b1717;--gsoft:#12301d}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header{background:var(--ac);color:var(--acx);padding:14px 16px;border-radius:0 0 14px 14px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+header h1{margin:0;font-size:18px;letter-spacing:-.01em}header small{opacity:.85;display:block;font-size:12px;font-weight:400}
+header .sp{flex:1}
+header input{background:rgba(255,255,255,.18);color:inherit;border:1px solid rgba(255,255,255,.4);border-radius:8px;padding:6px 9px;font:inherit;width:150px}
+header input::placeholder{color:inherit;opacity:.7}
+.wrap{display:grid;grid-template-columns:270px 1fr;gap:16px;padding:16px 0;max-width:1300px;margin:auto}
+@media(max-width:860px){.wrap{grid-template-columns:1fr;padding:10px 0}}
+nav{background:var(--pn);border:1px solid var(--ln);border-radius:14px;padding:10px;align-self:start;position:sticky;top:8px;max-height:calc(100vh - 16px);overflow:auto}
+@media(max-width:860px){nav{position:static;max-height:260px}}
+nav h4{margin:10px 6px 4px;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--mut)}
+nav button{display:flex;width:100%;text-align:left;gap:8px;align-items:center;background:none;border:0;color:var(--ink);padding:7px 8px;border-radius:8px;cursor:pointer;font:inherit;font-size:13.5px}
+nav button:hover{background:var(--soft)}nav button.on{background:var(--ac);color:var(--acx)}
+nav .dot{width:9px;height:9px;border-radius:50%;border:2px solid var(--ln);flex:none}nav .dot.d{background:var(--ok);border-color:var(--ok)}
+main{min-width:0}
+footer{border-top:1px solid var(--ln);margin-top:8px;padding:18px 0 28px;text-align:center;color:var(--mut);font-size:13px;line-height:1.7}footer b{color:var(--ink);font-weight:600}
+.card{background:var(--pn);border:1px solid var(--ln);border-radius:14px;padding:16px;margin-bottom:14px}
+.card h2{margin:0 0 6px;font-size:19px}.card h3{margin:14px 0 6px;font-size:15px}
+.tabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px;border-bottom:1px solid var(--ln)}
+.tabs button{background:none;border:0;border-bottom:3px solid transparent;color:var(--mut);padding:8px 12px;cursor:pointer;font:inherit;font-weight:600}
+.tabs button.on{color:var(--ac);border-color:var(--ac)}
+button.b{background:var(--ac);color:var(--acx);border:1px solid var(--ac);border-radius:9px;padding:7px 13px;font:inherit;font-weight:600;cursor:pointer}
+button.b:hover{filter:brightness(1.08)}button.b:disabled{opacity:.45;cursor:not-allowed}
+button.g{background:var(--pn);color:var(--ink);border:1px solid var(--ln);border-radius:9px;padding:7px 12px;font:inherit;cursor:pointer}
+button.g:hover{border-color:var(--ac)}button.g:disabled{opacity:.45;cursor:not-allowed}
+input,select,textarea{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--ln);border-radius:8px;padding:6px 9px;max-width:100%}
+input[type=number]{width:110px}
+label{font-size:13px;color:var(--mut)}
+table{border-collapse:collapse;width:100%;font-size:14px}th,td{border:1px solid var(--ln);padding:5px 8px;text-align:left}th{background:var(--soft)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:760px){.grid2{grid-template-columns:1fr}}
+.note{background:var(--soft);border-radius:10px;padding:9px 12px;font-size:14px;margin:8px 0}
+.warn{background:var(--wsoft);color:var(--ink);border-left:4px solid var(--warn);border-radius:6px;padding:8px 12px;margin:8px 0;font-size:14px}
+.okb{background:var(--gsoft);border-left:4px solid var(--ok);border-radius:6px;padding:8px 12px;margin:8px 0;font-size:14px}
+.badb{background:var(--bsoft);border-left:4px solid var(--bad);border-radius:6px;padding:8px 12px;margin:8px 0;font-size:14px}
+.steps li{margin:4px 0}.steps li.done{color:var(--mut);text-decoration:line-through}
+.sim{background:var(--soft);border-radius:12px;padding:12px}
+.chip{display:inline-block;background:var(--soft);border-radius:99px;padding:2px 10px;font-size:12px;color:var(--mut);margin:0 4px 4px 0}
+.rx{font-family:ui-monospace,Menlo,Consolas,monospace;background:var(--bg);border:1px solid var(--ln);border-radius:8px;padding:6px 10px;margin:6px 0;font-size:13.5px;overflow-x:auto}
+.mut{color:var(--mut)}.small{font-size:13px}.big{font-size:20px;font-weight:700}
+.opt{display:block;width:100%;text-align:left;margin:5px 0}
+svg text{font-family:system-ui,Segoe UI,Arial,sans-serif}
+.pb{height:8px;background:var(--ln);border-radius:9px;overflow:hidden}.pb i{display:block;height:100%;background:var(--ok)}
+</style>
+
+<header>
+<div><h1>BP111P Virtual Lab</h1><small>Pharmaceutical Inorganic &amp; Analytical Chemistry (Practical) · B.Pharm Sem I</small></div>
+<span class="sp"></span>
+<input id="nm" placeholder="Student name"><input id="rl" placeholder="Roll no.">
+</header>
+<div class="wrap"><nav id="nav"></nav><main id="main"></main></div>
+<footer><div>Designed and Created by <b>Dr. Babaraj Udugade</b> and <b>Mrs. Swati Udugade</b></div><div>Copyright &copy; Maharashtra Academy of Skills and Knowledge</div><div>Registered under MSME</div></footer>
+<script>
+/* ===== helpers ===== */
+const $=s=>document.querySelector(s);
+const fx=(x,d=2)=>(Number.isFinite(x)?x.toFixed(d):"–");
+function RNG(seed){let a=seed>>>0;return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const SEED0=(Date.now()&0xffffff)>>>0;
+const rng=(k)=>{let h=SEED0;for(const c of String(k))h=Math.imul(h^c.charCodeAt(0),16777619);return RNG(h)};
+const EXPS=[];
+const UNITS=[
+ {n:1,t:"Limit tests",need:4,sub:"Any 4 experiments"},
+ {n:2,t:"Preparation of inorganic pharmaceuticals",need:3,sub:"Any 3 experiments"},
+ {n:3,t:"Tests for purity",need:2,sub:"Any 2 experiments"},
+ {n:4,t:"Assay of inorganic compounds (with standardization of titrant)",need:5,sub:"Any 5 experiments"}];
+const REFS=["Bentley & Driver, Textbook of Pharmaceutical Chemistry (OUP)","Vogel, Textbook of Quantitative Chemical Analysis (Pearson)","Beckett & Stenlake, Practical Pharmaceutical Chemistry, Parts I & II (Athlone Press)","Kennedy, Analytical Chemistry: Principles (Saunders)","Schroff, Inorganic Pharmaceutical Chemistry (Oxford Book Co.)","Indian Pharmacopoeia Commission, Indian Pharmacopoeia"];
+
+/* ===== UNIT 1: LIMIT TESTS ===== */
+const SAMP=(a)=>a.map(([n,d,r])=>({n,d,r}));
+const MODOPT=(acid)=>["Dissolve directly in water","Neutralise: dissolve in dilute "+acid+" (acid stops effervescence)","Shake with water and filter; use the filtrate","Dissolve, acidify with dilute "+acid+" and filter off the liberated organic acid; use the filtrate","Decolourise (e.g. boil with ethanol), filter and use the filtrate"];
+const MODSAMP=SAMP([["Sodium bicarbonate","Alkaline; effervesces with acid (type: alkaline)",0.45],["Insoluble antacid powder","Does not dissolve in water (type: insoluble)",1.6],["Sodium benzoate","Salt of an organic acid; acid precipitates benzoic acid (type: organic acid salt)",0.75],["Potassium permanganate","Deep purple solution masks turbidity (type: coloured)",1.3]]);
+const MODRIGHT=[1,2,3,4];
+const VQ=(q,o,a,e)=>({q,o,a,e});
+
+EXPS.push({id:"L1",u:1,t:"Limit test and modified limit test for chloride (IP)",
+ aim:"To perform the limit test for chloride and the modified limit test for chloride on pharmaceutical substances, and decide whether each sample complies.",
+ th:`<p>Chloride is limited because it comes from raw materials and water used in manufacture. The test is a <b>comparison</b>: the opalescence produced by the sample is compared with that of a standard containing a known, permitted amount of chloride, both treated identically in matched Nessler cylinders.</p>
+ <div class="rx">Cl⁻ + Ag⁺ → AgCl↓ (white opalescence)</div>
+ <ul><li><b>Dilute nitric acid</b> keeps carbonate, phosphate and similar anions from precipitating with silver, and gives a cleaner AgCl suspension. Hydrochloric acid cannot be used (it adds chloride).</li><li><b>Standard:</b> 1 mL of 0.05845 % w/v NaCl (= 0.01 M) contains 0.5845 mg NaCl = <b>0.355 mg Cl⁻</b>.</li><li><b>Limit</b> (%) = 0.355 mg ÷ weight of sample (mg) × 100; for 1.00 g this is 0.0355 %.</li></ul>
+ <h3>Modified limit test</h3><p>Used when the sample cannot simply be dissolved in water: <b>alkaline</b> substances (dissolve in acid to stop effervescence), <b>insoluble</b> substances (extract with water, filter), <b>salts of organic acids</b> such as sodium benzoate (acidify and filter off the water-insoluble acid) and <b>coloured</b> substances (decolourise first, e.g. potassium permanganate boiled with ethanol).</p>
+ <p class="small mut">Reagent strengths follow standard IP-based practical manuals (silver nitrate is 0.1 M in the IP and 5 % w/v in several manuals). Always confirm against the current IP monograph.</p>`,
+ req:"Nessler cylinders (2, matched, 50 mL), glass rods, pipettes, sample, 0.05845 % w/v NaCl, dilute HNO₃, AgNO₃ solution, distilled water, black background.",
+ steps:["Weigh the specified quantity of sample and dissolve it in water in a Nessler cylinder (Test).","Put 1 mL of 0.05845 % NaCl in another cylinder (Standard).","Add 10 mL of dilute nitric acid to each; dilute both to 50 mL.","Add 1 mL of silver nitrate solution to each; stir immediately.","Stand 5 min protected from light; view against a black background.","Opalescence of Test not greater than Standard → complies."],
+ sim:{kind:"limit",key:"cl",label:"chloride",std:0.35457,stdTxt:"1 mL of 0.05845 % w/v NaCl = 0.355 mg Cl⁻",unit:"mg Cl⁻",wt:1,effect:"white",bg:"black",wait:"5 min",
+  steps:[
+   {t:"Test: dissolve 1.00 g of sample in water in a Nessler cylinder. Standard: pipette 1 mL of 0.05845 % NaCl into a second cylinder.",f:0.1},
+   {t:"Add 10 mL of dilute acid to each cylinder.",ask:{q:"Which acid do you add before silver nitrate?",o:["Dilute nitric acid","Dilute hydrochloric acid","Dilute sulphuric acid"],ok:0,why:"HCl would add chloride; H₂SO₄ can precipitate silver sulphate. HNO₃ suppresses Ag₂CO₃/Ag₃PO₄ and gives a clean AgCl opalescence."},f:0.3},
+   {t:"Dilute each cylinder to 50 mL with chloride-free distilled water.",f:0.5},
+   {t:"Add 1 mL of silver nitrate solution to each and stir immediately with a glass rod.",f:0.7},
+   {t:"Stand for 5 minutes, protected from light.",wait:1,f:1}],
+  samples:SAMP([["Sample A","White crystalline powder",0.45],["Sample B","White crystalline powder",0.82],["Sample C","White crystalline powder",1.25],["Sample D","Off-white powder",2.4]]),
+  mod:{samples:MODSAMP,opts:MODOPT("nitric acid"),right:MODRIGHT,pen:0.9}},
+ viva:[VQ("Why is dilute nitric acid, not hydrochloric acid, added in the chloride limit test?",["HNO₃ is a stronger oxidant","HCl would itself add chloride","HNO₃ dissolves AgCl"],1,"HCl would introduce chloride. Nitric acid also prevents precipitation of silver carbonate, phosphate etc."),VQ("Which standard is used in the IP chloride limit test?",["1 mL of 0.05845 % w/v NaCl","10 mL of 0.1 N HCl","1 mL of 5 % KCl"],0,"0.05845 % NaCl is 0.01 M, i.e. 0.355 mg chloride per mL."),VQ("Sodium benzoate is tested by the modified test because…",["it is coloured","acidification liberates insoluble benzoic acid that must be filtered off","it is insoluble in water"],1,"Organic acid salts give water-insoluble acids on acidification, which would add turbidity of their own.")]});
+
+EXPS.push({id:"L2",u:1,t:"Limit test and modified limit test for sulphate (IP)",
+ aim:"To perform the limit test and modified limit test for sulphate and decide whether given samples comply.",
+ th:`<p>Sulphate is detected as a fine white turbidity of barium sulphate and compared with a standard containing a permitted amount of sulphate.</p>
+ <div class="rx">SO₄²⁻ + Ba²⁺ → BaSO₄↓ (white turbidity)</div>
+ <ul><li><b>Dilute HCl</b> prevents precipitation of barium carbonate or phosphate.</li><li><b>Barium sulphate reagent</b> (BaCl₂ + sulphate-free alcohol + a little K₂SO₄) – the small amount of sulphate provides seed crystals so that the turbidity is uniform and reproducible; alcohol limits supersaturation and gives finer particles.</li><li><b>Standard:</b> 1 mL of 0.1089 % w/v K₂SO₄ = 1.089 mg K₂SO₄ = <b>0.600 mg SO₄²⁻</b>.</li></ul>
+ <p>The modified test uses the same pre-treatments as the modified chloride test (alkaline, insoluble, organic-acid salt, coloured samples).</p>
+ <p class="small mut">Confirm quantities with the current IP monograph before examination use.</p>`,
+ req:"Nessler cylinders, 0.1089 % w/v K₂SO₄, dilute HCl, barium sulphate reagent, distilled water, black background.",
+ steps:["Dissolve the specified quantity of sample in water in a Nessler cylinder (Test).","Put 1 mL of 0.1089 % K₂SO₄ in another cylinder (Standard).","Add 2 mL dilute HCl to each; dilute both to 45 mL.","Add 5 mL barium sulphate reagent to each; stir immediately.","Stand 5 min; compare turbidity against a black background."],
+ sim:{kind:"limit",key:"so4",label:"sulphate",std:0.6003,stdTxt:"1 mL of 0.1089 % w/v K₂SO₄ = 0.600 mg SO₄²⁻",unit:"mg SO₄²⁻",wt:1,effect:"white",bg:"black",wait:"5 min",
+  steps:[
+   {t:"Test: dissolve 1.00 g of sample in water in a Nessler cylinder. Standard: pipette 1 mL of 0.1089 % K₂SO₄ into a second cylinder.",f:0.1},
+   {t:"Add 2 mL of dilute acid to each cylinder.",ask:{q:"Which acid is added before the barium reagent?",o:["Dilute hydrochloric acid","Dilute sulphuric acid","Dilute nitric acid"],ok:0,why:"Dilute HCl keeps BaCO₃/BaPO₄ in solution. H₂SO₄ would add sulphate, which defeats the test."},f:0.25},
+   {t:"Dilute each cylinder to 45 mL with sulphate-free water.",f:0.4},
+   {t:"Add 5 mL of barium sulphate reagent to each and stir immediately.",f:0.65},
+   {t:"Stand for 5 minutes.",wait:1,f:1}],
+  samples:SAMP([["Sample A","White powder",0.5],["Sample B","White powder",0.85],["Sample C","White powder",1.2],["Sample D","White powder",2.2]]),
+  mod:{samples:MODSAMP,opts:MODOPT("hydrochloric acid"),right:MODRIGHT,pen:0.9}},
+ viva:[VQ("Why does the barium sulphate reagent contain a little potassium sulphate?",["To act as seed crystals for uniform turbidity","To adjust the pH","To dissolve BaSO₄"],0,"Seed crystals give reproducible, uniform turbidity."),VQ("Which acid is used in the sulphate limit test?",["Dilute HCl","Dilute H₂SO₄","Dilute HNO₃"],0,"HCl avoids adding sulphate and prevents BaCO₃ precipitation."),VQ("What does the alcohol in the reagent do?",["Reduces supersaturation, giving finer particles","Acts as an indicator","Reacts with sulphate"],0,"Alcohol reduces solubility changes and gives a finer, more even precipitate.")]});
+
+EXPS.push({id:"L3",u:1,t:"Limit test for iron (IP)",
+ aim:"To perform the limit test for iron by the thioglycollic acid method and judge whether a sample complies.",
+ th:`<p>Iron is limited because it catalyses oxidation and degradation of drugs. In ammoniacal solution, iron reacts with thioglycollic acid to give a pink-to-deep-reddish-purple ferrous thioglycollate complex.</p>
+ <div class="rx">2 Fe³⁺ + 2 HSCH₂COOH → 2 Fe²⁺ + (SCH₂COOH)₂ + 2 H⁺<br>Fe²⁺ + thioglycollate (NH₃, pH ≈ 9) → purple complex</div>
+ <ul><li><b>Citric acid (iron-free)</b> complexes other metals (Ca, Mg…) so that no hydroxide precipitates when ammonia is added.</li><li><b>Ammonia</b> makes the solution alkaline, where the colour develops.</li><li>The colour <b>fades in air</b> (oxidation), so compare promptly.</li><li><b>Standard iron solution:</b> 0.1726 g ferric ammonium sulphate per litre = 20 ppm Fe; 2 mL = <b>0.040 mg Fe</b>.</li></ul>
+ <p class="small mut">Quantities follow standard IP-based practical manuals; confirm with the current IP.</p>`,
+ req:"Nessler cylinders, standard iron solution (20 ppm Fe), 20 % w/v iron-free citric acid, thioglycollic acid, iron-free ammonia solution, distilled water, white background.",
+ steps:["Dissolve the specified quantity of sample in 20 mL water in a Nessler cylinder (Test).","Put 2 mL of standard iron solution and 20 mL water in another cylinder (Standard).","Add 2 mL of 20 % citric acid and 0.1 mL thioglycollic acid to each; mix.","Make alkaline with iron-free ammonia; dilute to 50 mL.","Stand 5 min; compare the colour against a white background promptly."],
+ sim:{kind:"limit",key:"fe",label:"iron",std:0.03998,stdTxt:"2 mL of standard iron solution (20 ppm Fe) = 0.040 mg Fe",unit:"mg Fe",wt:1,effect:"purple",bg:"white",wait:"5 min",
+  steps:[
+   {t:"Test: dissolve 1.00 g of sample in 20 mL water. Standard: 2 mL of standard iron solution + 20 mL water.",f:0.1},
+   {t:"Add 2 mL of 20 % citric acid to each cylinder and mix.",ask:{q:"What is the purpose of citric acid here?",o:["It keeps metals such as Ca/Mg in solution when ammonia is added","It reduces Fe³⁺","It makes the solution acidic for colour development"],ok:0,why:"Citric acid complexes interfering metals so hydroxides do not precipitate in the ammoniacal solution."},f:0.3},
+   {t:"Add 0.1 mL of thioglycollic acid to each and mix.",f:0.45},
+   {t:"Make each solution alkaline with iron-free ammonia and dilute to 50 mL.",f:0.75},
+   {t:"Stand for 5 minutes, then compare promptly.",wait:1,f:1}],
+  samples:SAMP([["Sample A","White crystalline powder",0.4],["Sample B","White crystalline powder",0.8],["Sample C","Pale powder",1.3],["Sample D","Pale yellow powder",2.5]])},
+ viva:[VQ("Which reagent reduces Fe³⁺ and forms the purple complex?",["Thioglycollic acid","Citric acid","Ammonia"],0,"Thioglycollic acid reduces Fe³⁺ to Fe²⁺ and complexes it."),VQ("Why must the colours be compared promptly?",["Colour fades by oxidation in air","The complex precipitates","Ammonia evaporates"],0,"The ferrous complex is oxidised by air and fades."),VQ("Standard iron solution contains…",["20 ppm Fe","20 % Fe","2 ppm Fe"],0,"0.1726 g ferric ammonium sulphate per litre ≈ 20 µg Fe/mL.")]});
+
+EXPS.push({id:"L4",u:1,t:"Limit test for lead (heavy metals, IP)",
+ aim:"To perform the limit test for lead (heavy metals expressed as lead) by the sulphide method and judge compliance.",
+ th:`<p>Heavy metals (expressed as lead) are limited because of their toxicity. At pH 3–4, lead ions react with hydrogen sulphide to give a dark-brown colloidal lead sulphide, which is compared with a standard lead solution treated identically.</p>
+ <div class="rx">Pb²⁺ + H₂S → PbS↓ (dark brown colloid) + 2 H⁺</div>
+ <ul><li><b>pH 3–4</b> (acetic acid / ammonia) gives the best colloidal PbS; outside this range colour is lost or other sulphides interfere.</li><li><b>H₂S solution must be freshly prepared</b> – it oxidises on standing.</li><li><b>Standard lead solution:</b> 20 ppm Pb (stock 0.1598 g Pb(NO₃)₂ per litre = 100 ppm, diluted 1 in 5); 2 mL = <b>0.040 mg Pb</b>. For a 2 g sample this corresponds to a 20 ppm limit.</li></ul>
+ <p class="small mut">Dilution details differ between manuals; this lab uses 2 mL of 20 ppm Pb. Confirm with the current IP.</p>`,
+ req:"Nessler cylinders, standard lead solution (20 ppm), dilute acetic acid, dilute ammonia, freshly prepared H₂S water, pH paper, white background.",
+ steps:["Test: take the sample solution (2.00 g in water) in a Nessler cylinder.","Standard: 2 mL standard lead solution + water in another cylinder.","Adjust each to pH 3–4 with acetic acid or ammonia; dilute to 35 mL.","Add 10 mL freshly prepared H₂S solution to each; dilute to 50 mL.","Stand 5 min; compare the brown colour against a white background."],
+ sim:{kind:"limit",key:"pb",label:"lead",std:0.04,stdTxt:"2 mL of standard lead solution (20 ppm Pb) = 0.040 mg Pb",unit:"mg Pb",wt:2,effect:"brown",bg:"white",wait:"5 min",
+  steps:[
+   {t:"Test: dissolve 2.00 g of sample in water (25 mL). Standard: 2 mL standard lead solution + 25 mL water.",f:0.1},
+   {t:"Adjust both to pH 3–4 using dilute acetic acid or ammonia.",ask:{q:"Why is the pH set to 3–4?",o:["Colloidal PbS forms best in this range","H₂S is only stable at pH 3–4","To dissolve the sample"],ok:0,why:"At pH 3–4 lead gives a stable colloidal PbS suited to comparison; other pH values lose colour or invite other sulphides."},f:0.35},
+   {t:"Dilute both to 35 mL.",f:0.5},
+   {t:"Add 10 mL of freshly prepared H₂S solution to each and dilute to 50 mL.",f:0.8},
+   {t:"Stand for 5 minutes.",wait:1,f:1}],
+  samples:SAMP([["Sample A","White powder",0.35],["Sample B","White powder",0.85],["Sample C","Greyish powder",1.25],["Sample D","Grey powder",2.6]])},
+ viva:[VQ("Why is freshly prepared H₂S solution required?",["H₂S oxidises and loses strength on standing","It is a solid","It changes pH"],0,"Old H₂S solution has oxidised to sulphur."),VQ("Optimum pH for the lead sulphide test?",["3–4","7–8","10–11"],0,"Dilute acetic acid / ammonia adjust to pH 3–4."),VQ("Heavy metals in the IP test are expressed as…",["Lead","Iron","Arsenic"],0,"The standard is a lead solution.")]});
+
+EXPS.push({id:"L5",u:1,t:"Limit test for arsenic (Gutzeit method, IP)",
+ aim:"To perform the limit test for arsenic by the Gutzeit method and judge compliance by comparing the stain with that of a standard.",
+ th:`<p>Arsenic is highly toxic. In the Gutzeit test, arsenic is reduced to arsine gas by nascent hydrogen; arsine turns mercuric chloride paper yellow to brown. The length and depth of the stain are compared with a standard stain made from a known amount of arsenic.</p>
+ <div class="rx">H₃AsO₄ + 2 HI → H₃AsO₃ + I₂ + H₂O (KI / SnCl₂ reduce As(V) to As(III))<br>Zn + 2 HCl → ZnCl₂ + 2 [H]<br>H₃AsO₃ + 6 [H] → AsH₃↑ + 3 H₂O<br>AsH₃ + HgCl₂ → yellow-brown stain on the paper</div>
+ <ul><li><b>Lead acetate cotton wool</b> in the tube traps hydrogen sulphide, which would otherwise blacken the paper.</li><li>Reaction at about <b>40 °C for 40 min</b>; keep the paper dry.</li><li><b>Standard stain:</b> 1 mL of dilute arsenic solution (1 ppm As) = <b>1 µg As</b>. Test and standard run at the same time; compare immediately.</li></ul>
+ <p class="small mut">Use arsenic-free (AsT) reagents. Confirm quantities with the current IP.</p>`,
+ req:"Gutzeit apparatus (wide-mouth bottle, delivery tube, lead acetate cotton plug, HgCl₂ paper), arsenic-free HCl, granulated zinc (AsT), KI, stannous chloride acid solution, standard arsenic solution (1 ppm).",
+ steps:["Place sample solution (1.00 g) in the bottle; add KI, SnCl₂ acid and 10 g granulated zinc.","Fit immediately the tube with lead acetate cotton plug and HgCl₂ paper.","Keep at about 40 °C for 40 min.","Prepare the standard stain in the same way with 1 mL of dilute arsenic solution.","Compare the stains at once."],
+ sim:{kind:"limit",key:"as",label:"arsenic",std:0.001,stdTxt:"1 mL of dilute arsenic solution (1 ppm) = 1 µg As = 0.001 mg",unit:"mg As",wt:1,effect:"stain",bg:"white",wait:"40 min",
+  steps:[
+   {t:"Test bottle: dissolve 1.00 g of sample in water. Standard bottle: 1 mL of dilute arsenic solution (1 µg As).",f:0.1},
+   {t:"Add arsenic-free HCl, 1 g KI and stannous chloride acid solution to each bottle.",ask:{q:"Why are KI and stannous chloride added?",o:["To reduce arsenic(V) to arsenic(III)","To generate hydrogen","To absorb H₂S"],ok:0,why:"As(V) is reduced to As(III) before arsine can form. Zinc/HCl then give the hydrogen; lead acetate absorbs H₂S."},f:0.3},
+   {t:"Add 10 g of granulated zinc (AsT) and close each bottle at once with the lead-acetate-cotton / mercuric chloride paper assembly.",f:0.6},
+   {t:"Keep at about 40 °C for 40 minutes.",wait:1,f:1}],
+  samples:SAMP([["Sample A","White powder",0.4],["Sample B","White powder",0.8],["Sample C","White powder",1.3],["Sample D","Grey-white powder",2.8]])},
+ viva:[VQ("The gas that forms the stain on mercuric chloride paper is…",["Arsine (AsH₃)","Hydrogen sulphide","Hydrogen"],0,"Arsine reacts with HgCl₂ to give a yellow-brown stain."),VQ("What is the role of lead acetate cotton wool?",["Traps H₂S","Absorbs arsine","Reduces arsenic"],0,"H₂S would stain the paper black."),VQ("Standard stain is prepared from…",["1 mL of dilute arsenic solution (1 ppm)","10 mL of 1 % As₂O₃","1 g of arsenic"],0,"1 mL × 1 µg/mL = 1 µg As.")]});
+/* ===== UNIT 2: PREPARATIONS ===== */
+const OK=(t,why)=>({t,ok:1,fac:1,why:why||"Correct."});
+const NO=(t,fac,why)=>({t,ok:0,fac,why});
+const MQ=(q,...o)=>({q,o});
+
+EXPS.push({id:"P1",u:2,t:"Preparation of aluminium hydroxide",
+ aim:"To prepare aluminium hydroxide from potash alum and sodium carbonate, calculate the theoretical and percentage yield, and test the product.",
+ th:`<p>Aluminium hydroxide is used as an antacid and as an adjuvant. It is precipitated when a soluble aluminium salt is treated with sodium carbonate; CO₂ is evolved.</p>
+ <div class="rx">2 KAl(SO₄)₂·12H₂O + 3 Na₂CO₃ → 2 Al(OH)₃↓ + K₂SO₄ + 3 Na₂SO₄ + 3 CO₂↑ + 24 H₂O</div>
+ <ul><li>Molar masses: alum 474.39; Na₂CO₃ (anhydrous) 105.99; Al(OH)₃ 78.00 g/mol.</li><li>1 mol alum needs 1.5 mol Na₂CO₃ and gives 1 mol Al(OH)₃.</li><li>Large excess of alkali redissolves the precipitate as aluminate; the precipitate must be washed free of sulphate and dried gently (strong heating converts it to Al₂O₃).</li></ul>
+ <p><b>% yield</b> = (actual yield ÷ theoretical yield) × 100.</p>`,
+ req:"Potash alum, anhydrous sodium carbonate, beakers, glass rod, funnel, filter paper, water bath, 5 % BaCl₂ solution, balance.",
+ steps:["Dissolve potash alum in hot water.","Dissolve sodium carbonate in water; add slowly with stirring until precipitation is complete (pH ≈ 7–8).","Allow to settle; wash by decantation with hot water until washings give no sulphate test with BaCl₂.","Filter and dry at 50–60 °C; weigh and calculate % yield."],
+ sim:{kind:"prep",prod:{n:"Aluminium hydroxide",f:"Al(OH)₃",MW:78.0},base:0.8,
+  reag:[{id:"a",n:"Potash alum, KAl(SO₄)₂·12H₂O",MW:474.39,u:"g",def:20,min:5,max:40,per:1},{id:"b",n:"Sodium carbonate, anhydrous",MW:105.99,u:"g",def:6.7,min:2,max:20,per:1.5}],
+  eq:"2 KAl(SO₄)₂·12H₂O + 3 Na₂CO₃ → 2 Al(OH)₃ + K₂SO₄ + 3 Na₂SO₄ + 3 CO₂ + 24 H₂O",
+  steps:[
+   {q:"How should the sodium carbonate solution be added to the hot alum solution?",o:[OK("Slowly, with constant stirring, until no more precipitate forms (pH about 7–8)","Slow addition controls CO₂ frothing and avoids local excess of alkali."),NO("All at once and boil",0.85,"Rapid addition gives lumpy precipitate that traps sulphate."),NO("A large excess of carbonate",0.6,"Excess alkali redissolves Al(OH)₃ as aluminate and the yield falls.")]},
+   {q:"How is the precipitate purified?",o:[OK("Decant and wash with hot water until the washings give no sulphate test with BaCl₂","Soluble K₂SO₄/Na₂SO₄ must be washed out."),NO("Filter and dry without washing",0.97,"Product is contaminated with sodium and potassium sulphates (fails the sulphate limit).")]},
+   {q:"How is it dried?",o:[OK("At 50–60 °C on a water bath or in a low-temperature oven"),NO("Ignite strongly",0.62,"Strong heating converts Al(OH)₃ to Al₂O₃ and loses mass.")]}],
+  obs:"A white gelatinous precipitate forms with effervescence of CO₂. Dried product: white, amorphous powder.",
+  tests:["Dissolves in dilute HCl: Al(OH)₃ + 3 HCl → AlCl₃ + 3 H₂O","Soluble in excess NaOH (amphoteric)","Washings free from sulphate: no turbidity with BaCl₂"]},
+ viva:[VQ("Why must excess sodium carbonate be avoided?",["It makes the product acidic","Aluminium hydroxide redissolves as aluminate","It evolves chlorine"],1,"Al(OH)₃ is amphoteric and dissolves in excess alkali."),VQ("Washings are tested with BaCl₂ to check for…",["Chloride","Sulphate","Carbonate"],1,"Barium chloride detects sulphate left from the alum and sodium sulphate."),VQ("Why is the product not ignited?",["It would become Al₂O₃","It would turn blue","It would dissolve"],0,"Strong heating dehydrates Al(OH)₃ to Al₂O₃.")]});
+
+EXPS.push({id:"P2",u:2,t:"Preparation of potash alum",
+ aim:"To prepare potash alum, KAl(SO₄)₂·12H₂O, from aluminium scrap, and calculate the percentage yield.",
+ th:`<p>Aluminium dissolves in potassium hydroxide to give potassium tetrahydroxoaluminate; adding sulphuric acid neutralises it and, after crystallisation, gives potash alum, a double salt used as an astringent and styptic.</p>
+ <div class="rx">2 Al + 2 KOH + 6 H₂O → 2 K[Al(OH)₄] + 3 H₂↑<br>2 K[Al(OH)₄] + 4 H₂SO₄ → 2 KAl(SO₄)₂ + 8 H₂O<br>KAl(SO₄)₂ + 12 H₂O → KAl(SO₄)₂·12H₂O (crystals)</div>
+ <ul><li>Molar masses: Al 26.98; KOH 56.11; potash alum 474.39 g/mol.</li><li>Per mole of alum: 1 mol Al, 1 mol KOH, 2 mol H₂SO₄.</li><li>Hydrogen is flammable: carry out in a fume cupboard, away from flames.</li></ul>`,
+ req:"Aluminium foil/scrap, KOH pellets, 4 M H₂SO₄, beakers, filter funnel, evaporating dish, ice bath, balance.",
+ steps:["Cut aluminium into small pieces; add in portions to hot KOH solution until the reaction ceases; filter.","Add 4 M H₂SO₄ slowly with stirring; the first precipitate redissolves.","Concentrate to crystallisation point; cool slowly.","Filter crystals, wash with a little cold water, dry; weigh."],
+ sim:{kind:"prep",prod:{n:"Potash alum",f:"KAl(SO₄)₂·12H₂O",MW:474.39},base:0.7,
+  reag:[{id:"a",n:"Aluminium foil/scrap",MW:26.98,u:"g",def:2,min:0.5,max:5,per:1},{id:"b",n:"Potassium hydroxide",MW:56.11,u:"g",def:4.2,min:1,max:8,per:1},{id:"c",n:"Sulphuric acid, 4 M",MW:0,u:"mL",conc:4,def:40,min:10,max:80,per:2}],
+  eq:"2 Al + 2 KOH + 4 H₂SO₄ + 22 H₂O → 2 KAl(SO₄)₂·12H₂O + 3 H₂",
+  steps:[
+   {q:"After the aluminium has dissolved in hot KOH, what do you do?",o:[OK("Filter to remove insoluble impurities (dark flakes of iron/silicon)"),NO("Proceed without filtering",0.95,"Insoluble impurities contaminate the crystals.")]},
+   {q:"How do you add the sulphuric acid?",o:[OK("Slowly with stirring: a white precipitate of Al(OH)₃ forms first and redissolves on adding more acid","Only a slight excess of acid is needed to complete the double salt."),NO("Stop adding acid once the precipitate appears",0.5,"The precipitate is Al(OH)₃, not the alum.")]},
+   {q:"How do you crystallise the alum?",o:[OK("Concentrate to crystallisation point and cool slowly, undisturbed","Slow cooling gives large octahedral crystals."),NO("Evaporate to dryness",0.7,"Water of crystallisation is lost and a crust forms."),NO("Chill rapidly with stirring",0.9,"Fine crystals trap mother liquor.")]}],
+  obs:"Vigorous effervescence of hydrogen; a clear solution after filtering. Colourless octahedral crystals separate on cooling.",
+  tests:["Aqueous solution + NaOH: white gelatinous precipitate, soluble in excess","Solution + BaCl₂: white precipitate (sulphate)","Flame test: lilac (potassium)"]},
+ viva:[VQ("Which gas is evolved when aluminium dissolves in KOH?",["Oxygen","Hydrogen","Carbon dioxide"],1,"2Al + 2KOH + 6H₂O → 2K[Al(OH)₄] + 3H₂."),VQ("Why is a white precipitate seen on first adding H₂SO₄?",["Potassium sulphate","Aluminium hydroxide","Alum"],1,"The aluminate is neutralised to Al(OH)₃, which redissolves in more acid."),VQ("Potash alum is a…",["Double salt","Complex salt","Basic salt"],0,"K₂SO₄·Al₂(SO₄)₃·24H₂O.")]});
+
+EXPS.push({id:"P3",u:2,t:"Preparation of ferrous sulphate",
+ aim:"To prepare ferrous sulphate heptahydrate from iron filings and dilute sulphuric acid and calculate the percentage yield.",
+ th:`<p>Ferrous sulphate is a haematinic used in iron deficiency. It is made by dissolving iron in dilute sulphuric acid; excess iron keeps iron in the ferrous state and consumes all the acid.</p>
+ <div class="rx">Fe + H₂SO₄ → FeSO₄ + H₂↑<br>FeSO₄ + 7 H₂O → FeSO₄·7H₂O (pale bluish-green crystals)</div>
+ <ul><li>Molar masses: Fe 55.85; FeSO₄·7H₂O 278.01 g/mol; 1 mol Fe ↔ 1 mol H₂SO₄ ↔ 1 mol product.</li><li><b>Use dilute acid</b>: concentrated H₂SO₄ would oxidise iron to Fe³⁺ with SO₂ evolution.</li><li>Keep the solution slightly <b>acidic</b> and avoid prolonged exposure to air: Fe²⁺ oxidises to yellow-brown basic ferric sulphate.</li></ul>`,
+ req:"Iron filings, 2 M H₂SO₄, conical flask, funnel, filter paper, evaporating dish, ethanol, balance.",
+ steps:["Warm iron filings with dilute H₂SO₄ (fume cupboard) until evolution of hydrogen ceases; leave some iron undissolved.","Filter hot into a flask containing a few drops of dilute H₂SO₄.","Concentrate until crystals begin to form; cool slowly.","Wash the crystals with a little alcohol, dry between filter papers; weigh."],
+ sim:{kind:"prep",prod:{n:"Ferrous sulphate heptahydrate",f:"FeSO₄·7H₂O",MW:278.01},base:0.7,
+  reag:[{id:"a",n:"Iron filings",MW:55.845,u:"g",def:6,min:1,max:15,per:1},{id:"b",n:"Sulphuric acid, 2 M",MW:0,u:"mL",conc:2,def:45,min:10,max:100,per:1}],
+  eq:"Fe + H₂SO₄ + 7 H₂O → FeSO₄·7H₂O + H₂",
+  steps:[
+   {q:"Which acid do you use to dissolve the iron?",o:[OK("Dilute sulphuric acid, with iron in slight excess"),NO("Concentrated sulphuric acid",0.6,"It oxidises to Fe³⁺ and evolves SO₂.")]},
+   {q:"How do you handle the filtration?",o:[OK("Filter hot into a flask with a few drops of dilute H₂SO₄","The acid prevents hydrolysis/oxidation to basic ferric sulphate."),NO("Allow it to cool first, then filter",0.85,"Crystals form in the filter and are lost.")]},
+   {q:"How do you crystallise it?",o:[OK("Concentrate until crystals start to form, then cool slowly"),NO("Evaporate to dryness",0.5,"Oxidation and loss of water of crystallisation."),NO("Boil in an open dish for hours without acid",0.75,"Air oxidises Fe²⁺ to brown basic ferric sulphate.")]},
+   {q:"How do you dry the crystals?",o:[OK("Wash with a little alcohol, press between filter papers, store in a closed container"),NO("Dry in an oven at 100 °C",0.55,"Crystals effloresce and oxidise.")]}],
+  obs:"Effervescence of hydrogen; pale green solution; pale bluish-green monoclinic crystals on cooling.",
+  tests:["Solution + potassium ferricyanide: deep blue precipitate (Fe²⁺)","Solution + BaCl₂: white precipitate (sulphate)","Solution + NaOH: dirty-green precipitate turning brown on standing"]},
+ viva:[VQ("Why is some iron left undissolved?",["To keep iron in the Fe²⁺ state and use up all acid","To catalyse the reaction","To make the crystals green"],0,"Excess iron reduces any Fe³⁺ and ensures no free acid."),VQ("Colour of the crystals of FeSO₄·7H₂O?",["Pale bluish-green","Pink","White"],0,"Hydrated Fe²⁺ is pale bluish-green."),VQ("Why add a few drops of dilute H₂SO₄ before crystallisation?",["Prevent oxidation/hydrolysis","Speed filtering","Colour"],0,"Acidity keeps Fe²⁺ stable.")]});
+
+EXPS.push({id:"P4",u:2,t:"Preparation of magnesium sulphate",
+ aim:"To prepare magnesium sulphate heptahydrate (Epsom salt) from magnesium carbonate or magnesium hydroxide and calculate the percentage yield.",
+ th:`<p>Magnesium sulphate is used as an osmotic laxative and anticonvulsant. It is prepared by neutralising dilute sulphuric acid with magnesium carbonate or hydroxide; a slight excess of the base ensures the acid is completely used.</p>
+ <div class="rx">MgCO₃ + H₂SO₄ → MgSO₄ + H₂O + CO₂↑<br>Mg(OH)₂ + H₂SO₄ → MgSO₄ + 2 H₂O<br>MgSO₄ + 7 H₂O → MgSO₄·7H₂O</div>
+ <ul><li>Molar masses: MgCO₃ 84.31; Mg(OH)₂ 58.32; MgSO₄·7H₂O 246.47 g/mol.</li><li>Add the base in small portions (CO₂ frothing); filter off the excess and insoluble impurities.</li></ul>`,
+ req:"Magnesium carbonate or hydroxide, 2 M H₂SO₄, beaker, funnel, filter paper, evaporating dish, balance.",
+ steps:["Add the magnesium compound in portions to warm dilute H₂SO₄ until effervescence ceases and a little remains.","Filter the hot solution to remove excess and impurities.","Concentrate to the crystallisation point; cool.","Collect, wash with a little cold water, dry; weigh."],
+ sim:{kind:"prep",prod:{n:"Magnesium sulphate heptahydrate",f:"MgSO₄·7H₂O",MW:246.47},base:0.72,
+  reag:[{id:"a",n:"Magnesium compound",MW:84.31,u:"g",def:6,min:1,max:15,per:1,opts:[{n:"Magnesium carbonate, MgCO₃",MW:84.31},{n:"Magnesium hydroxide, Mg(OH)₂",MW:58.32}]},{id:"b",n:"Sulphuric acid, 2 M",MW:0,u:"mL",conc:2,def:30,min:10,max:80,per:1}],
+  eq:"MgCO₃ + H₂SO₄ + 7 H₂O → MgSO₄·7H₂O + CO₂ ; (or Mg(OH)₂ + H₂SO₄ + 5 H₂O → MgSO₄·7H₂O)",
+  steps:[
+   {q:"How do you add the magnesium compound to the acid?",o:[OK("In small portions until effervescence stops and a little solid remains","Slight excess of base ensures a neutral product."),NO("Excess acid is left to be safe",0.9,"The product is acidic and must be neutralised.")]},
+   {q:"What follows?",o:[OK("Filter the hot solution to remove excess base and insoluble impurities"),NO("Skip filtration",0.97,"Impurities (e.g. silica, iron) stay in the product.")]},
+   {q:"How do you crystallise it?",o:[OK("Concentrate until a crystal film forms on a glass rod; cool slowly"),NO("Boil to dryness",0.6,"Gives lower hydrates, not the heptahydrate.")]}],
+  obs:"Effervescence (carbonate only); a clear colourless solution; small colourless needle-like crystals on cooling.",
+  tests:["Solution + BaCl₂: white precipitate (sulphate)","Solution + NaOH: white precipitate (Mg(OH)₂)","Solution + Na₂HPO₄/NH₃: white crystalline precipitate (Mg)"]},
+ viva:[VQ("Why is a slight excess of the magnesium compound used?",["To neutralise all the sulphuric acid","To increase the colour","To catalyse crystallisation"],0,"So no free acid remains in the product."),VQ("Common name of MgSO₄·7H₂O?",["Epsom salt","Glauber's salt","Blue vitriol"],0,"Epsom salt."),VQ("The gas evolved with MgCO₃ is…",["CO₂","H₂","O₂"],0,"Carbonate + acid → CO₂.")]});
+
+/* ===== UNIT 3: PURITY TESTS ===== */
+EXPS.push({id:"T1",u:3,t:"Swelling power of bentonite (IP)",
+ aim:"To assess the swelling power of bentonite samples and decide whether they comply with the pharmacopoeial requirement.",
+ th:`<p>Bentonite is a natural colloidal hydrated aluminium silicate (mainly montmorillonite) used as a suspending agent and adsorbent. Its quality depends on how much it swells in water.</p>
+ <ul><li><b>Method:</b> 2 g of bentonite is added in portions to 100 mL of water in a stoppered 100 mL cylinder, each portion being allowed to settle before the next. After 2 h the apparent volume of the swollen sediment is read.</li><li><b>Requirement:</b> not less than <b>24 mL</b> (pharmacopoeial requirement, as in the USP monograph; confirm against the current IP).</li><li>Adding bentonite all at once gives lumps that do not hydrate fully and under-read the swelling.</li></ul>`,
+ req:"Bentonite, 100 mL glass-stoppered measuring cylinder, balance, water, stopwatch.",
+ steps:["Take 100 mL of water in a 100 mL glass-stoppered cylinder.","Add 2 g of bentonite in small portions, letting each settle before the next.","Allow to stand for 2 hours.","Read the volume occupied by the swollen sediment; it should be not less than 24 mL."],
+ sim:{kind:"bent",batches:[{n:"Batch A",V:31,tau:28},{n:"Batch B",V:26,tau:32},{n:"Batch C",V:19.5,tau:35}]},
+ viva:[VQ("Minimum swelling power of bentonite in this test?",["24 mL","10 mL","50 mL"],0,"NLT 24 mL after 2 h."),VQ("Why add bentonite in small portions?",["Avoid lumps, so each portion hydrates fully","To heat the water","To change pH"],0,"Lumps stay dry inside and under-read swelling."),VQ("Bentonite is chiefly…",["Hydrated aluminium silicate (montmorillonite)","Calcium carbonate","Talc"],0,"A swelling clay.")]});
+
+EXPS.push({id:"T2",u:3,t:"Acid-neutralizing capacity of aluminium hydroxide gel",
+ aim:"To determine the acid-neutralizing capacity (ANC) of aluminium hydroxide gel by back titration and express it as mEq per gram.",
+ th:`<p>An antacid is judged by how much acid it can neutralise. Aluminium hydroxide reacts with hydrochloric acid, so the capacity is measured by adding a <b>known excess of HCl</b>, letting it react, then <b>back-titrating the leftover acid with NaOH</b> to pH 3.5 (USP ⟨301⟩ conditions).</p>
+ <div class="rx">Al(OH)₃ + 3 HCl → AlCl₃ + 3 H₂O</div>
+ <ul><li>Conditions: 37 ± 3 °C; add 30.0 mL of 1.0 N HCl to the sample in about 70 mL water; stir exactly 15 min; titrate with 0.5 N NaOH to a stable pH 3.5 within 5 min.</li><li><b>ANC (mEq) = (30.0 × N<sub>HCl</sub>) − (V<sub>NaOH</sub> × N<sub>NaOH</sub>)</b>; express per gram of sample.</li><li>Expected value: 3 mEq per 78.0 mg Al(OH)₃ = 0.0385 mEq/mg. Aluminium hydroxide gel (USP) should give not less than 65 % of this expected value.</li></ul>
+ <p class="small mut">The model titration treats the solution as a strong-acid titration; pH near 3.5 changes sharply, so add NaOH dropwise near the end.</p>`,
+ req:"Aluminium hydroxide gel, 1.0 N HCl, 0.5 N NaOH, pH meter, magnetic stirrer, 37 °C water bath, burette, balance.",
+ steps:["Weigh the gel into a beaker; add 70 mL water; stir 1 min.","Add exactly 30.0 mL of 1.0 N HCl; stir for exactly 15 min at 37 °C.","Titrate the excess HCl with 0.5 N NaOH to a stable pH 3.5.","Calculate mEq of acid consumed per gram."],
+ sim:{kind:"anc",samples:[{n:"Batch A",pct:4.0,eff:0.84},{n:"Batch B",pct:4.0,eff:0.58},{n:"Batch C",pct:4.2,eff:0.72}]},
+ viva:[VQ("This test is a…",["Back titration","Direct titration of the gel","Precipitation titration"],0,"Excess HCl is added and the leftover is titrated with NaOH."),VQ("End-point pH?",["3.5","7.0","10.0"],0,"Titrate to a stable pH of 3.5."),VQ("Expected ANC of pure Al(OH)₃?",["3 mEq per 78 mg","1 mEq per 78 mg","6 mEq per 78 mg"],0,"Each Al(OH)₃ neutralises 3 H⁺.")]});
+/* ===== TITRANTS and COLOUR CHANGES ===== */
+const TT={
+ naoh:{n:"NaOH",M:0.1,txt:"0.1 M NaOH",tol:0.015},
+ cas:{n:"ceric ammonium sulphate",M:0.1,txt:"0.1 M ceric ammonium sulphate (CAS)",tol:0.015},
+ thio:{n:"sodium thiosulphate",M:0.1,txt:"0.1 M sodium thiosulphate",tol:0.015},
+ kmno4:{n:"KMnO₄",M:0.02,txt:"0.02 M KMnO₄",tol:0.015},
+ edta:{n:"disodium edetate",M:0.05,txt:"0.05 M disodium edetate",tol:0.015},
+ hclo4:{n:"perchloric acid",M:0.1,txt:"0.1 M perchloric acid in glacial acetic acid",tol:0.015},
+ scn:{n:"NH₄SCN",M:0.1,txt:"0.1 M ammonium thiocyanate",tol:0.015},
+ thio01:{n:"sodium thiosulphate (0.01 M, factor 1.000)",M:0.01,txt:"0.01 M sodium thiosulphate (standardised, F = 1.000)",tol:0}};
+const CL="#e9f2f5";
+const COL={
+ phph:p=>p<1?[CL,"Colourless"]:p<1.004?["#f5c6dc","Faint pink, persists 30 s – END POINT"]:p<1.02?["#ee94bd","Pink – slight overshoot"]:["#d6247a","Deep pink – overshot"],
+ self:p=>p<1?[CL,"Colourless (Mn²⁺)"]:p<1.004?["#f1c3e6","Faint permanent pink – END POINT"]:p<1.03?["#e48ac6","Pink – slight overshoot"]:["#b0158a","Purple – overshot"],
+ fer:p=>p<0.98?["#d9482b","Orange-red (ferroin)"]:p<1?["#e0742f","Orange – near end point"]:p<1.004?["#a9cfe6","Pale blue – END POINT"]:["#7fb0dc","Blue – overshot"],
+ ebt:p=>p<0.97?["#a3263f","Wine red (metal–EBT)"]:p<1?["#7d3a8c","Purple – near end point"]:p<1.004?["#3d6fd6","Blue – END POINT"]:["#2f5fcb","Deep blue – overshot"],
+ hnb:p=>p<0.97?["#b5306f","Red-violet (Ca–indicator)"]:p<1?["#8a3f9a","Violet – near end point"]:p<1.004?["#3a6ad8","Blue – END POINT"]:["#2d58c4","Deep blue – overshot"],
+ cv:p=>p<0.9?["#5b2c8f","Violet"]:p<0.985?["#3646a8","Blue"]:p<1?["#2a8190","Blue-green – near end point"]:p<1.004?["#1f8a5a","Green – END POINT"]:["#7bb53a","Yellowish-green – overshot"],
+ volh:p=>p<0.99?["#f1eee4","Cream suspension of AgCl/AgSCN"]:p<1?["#e8c9ae","Reddish flash that fades"]:p<1.004?["#c97a52","Permanent reddish-brown – END POINT"]:["#a8452a","Deep brown – overshot"]};
+function iodo(endCol,endLab,kscn){return(p,c)=>{
+ if(!c.done.starch){return p<0.88?["#8a4b14","Brown (iodine)"]:p<1?["#e8d36a","Pale straw yellow – add starch now"]:[endCol,endLab+" (starch not added)"]}
+ if(kscn&&!c.done.kscn&&p>=0.97)return["#6a77b0","Pale blue; colour returns on standing – add KSCN"];
+ return p<1?["#1b2a5c","Blue-black (starch–iodine)"]:p<1.004?[endCol,endLab+" – END POINT"]:[endCol,endLab+" (overshot)"]}}
+const rngs=(lo,hi)=>r=>lo+(hi-lo)*r();
+
+/* ===== STANDARDIZATION TRIALS ===== */
+const S_KHP={k:"std",tk:"naoh",title:"Standardise 0.1 M NaOH with potassium hydrogen phthalate",tag:"std",ind:"Phenolphthalein",col:COL.phph,
+ prep:["Dry KHP at 120 °C for 2 h; weigh accurately into a conical flask.","Dissolve in about 50 mL carbon-dioxide-free water.","Add 2 drops of phenolphthalein; titrate with NaOH to a faint pink."],
+ inp:{l:"KHP taken",u:"mg",min:400,max:600,def:500,st:1},eq:204.22,need:i=>i.a/204.22,note:"KHC₈H₄O₄ + NaOH → KNaC₈H₄O₄ + H₂O (1 : 1). 1 mL of 0.1 M NaOH ≡ 20.42 mg KHP."};
+EXPS.push({id:"A1",u:4,t:"Assay of ammonium chloride (acid–base titration)",
+ aim:"To standardise 0.1 M sodium hydroxide and assay ammonium chloride by the formaldehyde method.",
+ th:`<p>Ammonium ion is too weak an acid (pKa 9.25) to be titrated directly with NaOH. Formaldehyde converts it to hexamine, a neutral compound, and releases an equivalent amount of strong acid which is titrated with NaOH.</p>
+ <div class="rx">4 NH₄Cl + 6 HCHO → (CH₂)₆N₄ + 4 HCl + 6 H₂O<br>HCl + NaOH → NaCl + H₂O</div>
+ <ul><li><b>Factor:</b> 1 mL of 0.1 M NaOH ≡ <b>5.349 mg</b> NH₄Cl (M = 53.49). IP limit: 99.0–100.5 % (dried basis).</li><li>Formaldehyde solution contains formic acid; <b>neutralise it to phenolphthalein</b> before use or the titre is inflated.</li><li>NaOH is not a primary standard (absorbs CO₂, moisture) → standardise against <b>potassium hydrogen phthalate</b>.</li></ul>`,
+ req:"0.1 M NaOH, KHP, formaldehyde solution, phenolphthalein, burette, conical flasks, balance.",
+ steps:["Standardise the NaOH with KHP (Trials 1–3).","Weigh about 0.1 g NH₄Cl, dissolve in 20 mL water.","Add 5 mL neutralised formaldehyde and 20 mL water; add phenolphthalein; wait 2 min.","Titrate with NaOH to a faint pink; calculate % NH₄Cl."],
+ sim:{kind:"titr",trials:[S_KHP,{k:"assay",tk:"naoh",title:"Assay of ammonium chloride",ind:"Phenolphthalein",col:COL.phph,
+  prep:["Weigh about 0.1 g of NH₄Cl accurately and dissolve in 20 mL water.","Add 5 mL of neutralised formaldehyde and 20 mL water.","Add 2 drops of phenolphthalein; stand 2 min; titrate to a faint pink."],
+  inp:{l:"NH₄Cl taken",u:"mg",min:80,max:120,def:100,st:1},eq:53.49,gen:rngs(97.4,100.4),need:(i,h)=>i.a*h.P/100/53.49,
+  acts:[{id:"hcho",l:"Add 5 mL neutralised formaldehyde + 20 mL water",must:1,err:0.3,why:"Formaldehyde not neutralised: its formic acid added to the titre (+0.3 mL)."}],note:"1 mL of 0.1 M NaOH ≡ 5.349 mg NH₄Cl.",unitR:"% NH₄Cl"}]},
+ viva:[VQ("Why is formaldehyde added in the assay of ammonium chloride?",["NH₄⁺ is too weak an acid; HCHO frees a strong acid by forming hexamine","It acts as an indicator","It dissolves NH₄Cl"],0,"4NH₄Cl + 6HCHO → hexamine + 4HCl."),VQ("Primary standard for NaOH here?",["Potassium hydrogen phthalate","HCl","Sodium carbonate"],0,"KHP is pure, stable and non-hygroscopic."),VQ("Why neutralise formaldehyde first?",["It contains formic acid","It is basic","It oxidises NH₃"],0,"Formic acid would consume NaOH and give a high result.")]});
+
+const S_CAS={k:"std",tk:"cas",title:"Standardise 0.1 M ceric ammonium sulphate with arsenic trioxide",ind:"Ferroin",col:COL.fer,
+ prep:["Weigh about 0.2 g of dried As₂O₃ accurately; dissolve in 25 mL of 8 % NaOH, warming gently.","Add 100 mL water, 30 mL dilute H₂SO₄, 0.15 mL osmic acid solution (catalyst) and 0.1 mL ferroin.","Titrate with CAS until the pink/orange colour changes to pale blue."],
+ inp:{l:"As₂O₃ taken",u:"mg",min:150,max:250,def:200,st:1},eq:49.46,need:i=>i.a/49.46,note:"As₂O₃ + 4 Ce⁴⁺ + 2 H₂O → 2 H₃AsO₄ … (4 electrons). 1 mL of 0.1 M CAS ≡ 4.946 mg As₂O₃ (handle arsenic trioxide with great care)."};
+EXPS.push({id:"A2",u:4,t:"Assay of ferrous sulphate by cerimetry",
+ aim:"To standardise 0.1 M ceric ammonium sulphate and assay ferrous sulphate by cerimetry.",
+ th:`<p>Cerium(IV) is a strong, stable oxidant. In acid solution it oxidises Fe(II) quantitatively in a 1 : 1 reaction and the end point is sharp with ferroin.</p>
+ <div class="rx">Fe²⁺ + Ce⁴⁺ → Fe³⁺ + Ce³⁺</div>
+ <ul><li><b>Factor:</b> 1 mL of 0.1 M CAS ≡ <b>27.80 mg</b> FeSO₄·7H₂O (M = 278.01).</li><li><b>Indicator:</b> ferroin – orange-red [Fe(phen)₃]²⁺ turns pale blue [Fe(phen)₃]³⁺ at the end point.</li><li>Standardised with arsenic trioxide (osmic acid catalyst) as in the IP; sodium oxalate or Mohr's salt are alternatives.</li></ul>`,
+ req:"CAS solution, As₂O₃, ferrous sulphate, dilute H₂SO₄, ferroin, burette, balance.",
+ steps:["Standardise CAS with As₂O₃.","Dissolve about 0.55 g FeSO₄·7H₂O in a mixture of water and dilute H₂SO₄.","Add 2 drops ferroin; titrate with CAS to a pale-blue end point.","Calculate % FeSO₄·7H₂O."],
+ sim:{kind:"titr",trials:[S_CAS,{k:"assay",tk:"cas",title:"Assay of ferrous sulphate heptahydrate",ind:"Ferroin",col:COL.fer,
+  prep:["Weigh about 0.55 g of FeSO₄·7H₂O accurately.","Dissolve in 25 mL dilute H₂SO₄ and 25 mL freshly boiled and cooled water.","Add 2 drops of ferroin; titrate with CAS to pale blue."],
+  inp:{l:"FeSO₄·7H₂O taken",u:"mg",min:450,max:650,def:550,st:1},eq:278.01,gen:rngs(97.5,101.5),need:(i,h)=>i.a*h.P/100/278.01,note:"1 mL of 0.1 M CAS ≡ 27.80 mg FeSO₄·7H₂O.",unitR:"% FeSO₄·7H₂O"}]},
+ viva:[VQ("Indicator colour change in cerimetry with ferroin?",["Red → pale blue","Colourless → pink","Blue → colourless"],0,"Fe(II)-phenanthroline (red) is oxidised to the pale-blue Fe(III) complex."),VQ("Fe²⁺ : Ce⁴⁺ ratio?",["1 : 1","1 : 2","2 : 1"],0,"One electron change each."),VQ("Why is the ferrous sulphate dissolved in dilute H₂SO₄ and boiled-cooled water?",["Prevent air oxidation of Fe²⁺","Increase solubility of Ce⁴⁺","Remove CO₂ only"],0,"Dissolved oxygen oxidises Fe²⁺.")]});
+
+const S_THIO={k:"std",tk:"thio",title:"Standardise 0.1 M sodium thiosulphate with potassium dichromate",ind:"Starch",col:iodo("#8fcf9b","Green (Cr³⁺)"),
+ prep:["Weigh about 0.16 g of K₂Cr₂O₇ into an iodine flask; dissolve in 50 mL water.","Add 2 g KI and 10 mL dilute HCl; stopper and stand 5 min in the dark.","Dilute to 100 mL; titrate with thiosulphate until pale yellow, then add starch and continue to a green end point."],
+ inp:{l:"K₂Cr₂O₇ taken",u:"mg",min:120,max:200,def:160,st:1},eq:49.03,need:i=>i.a/49.03,
+ acts:[{id:"ki",l:"Add 2 g KI + 10 mL dilute HCl; stand 5 min in the dark",must:1,block:1,why:"Iodine must be liberated first."},{id:"starch",l:"Add starch solution",starch:1}],
+ note:"Cr₂O₇²⁻ + 6 I⁻ + 14 H⁺ → 2 Cr³⁺ + 3 I₂ + 7 H₂O ; I₂ + 2 S₂O₃²⁻ → 2 I⁻ + S₄O₆²⁻. 1 mL of 0.1 M thiosulphate ≡ 4.903 mg K₂Cr₂O₇."};
+EXPS.push({id:"A3",u:4,t:"Assay of copper sulphate by iodometry",
+ aim:"To standardise 0.1 M sodium thiosulphate and assay copper sulphate by iodometry.",
+ th:`<p>Copper(II) oxidises iodide to iodine (copper(I) iodide precipitates). The iodine liberated is titrated with sodium thiosulphate using starch.</p>
+ <div class="rx">2 Cu²⁺ + 4 I⁻ → 2 CuI↓ + I₂<br>I₂ + 2 S₂O₃²⁻ → 2 I⁻ + S₄O₆²⁻</div>
+ <ul><li><b>Factor:</b> 1 mL of 0.1 M Na₂S₂O₃ ≡ <b>24.97 mg</b> CuSO₄·5H₂O (M = 249.68).</li><li>Add <b>starch only near the end</b> (pale yellow); early addition gives a starch–iodine complex that dissolves slowly.</li><li>CuI adsorbs iodine; <b>KSCN</b> near the end converts CuI to CuSCN, which adsorbs less iodine and gives a sharp end point.</li><li>Standardise thiosulphate with potassium dichromate.</li></ul>`,
+ req:"Na₂S₂O₃, K₂Cr₂O₇, CuSO₄·5H₂O, KI, acetic acid, starch, KSCN, iodine flasks, burette.",
+ steps:["Standardise thiosulphate with K₂Cr₂O₇.","Dissolve about 0.6 g CuSO₄·5H₂O in 50 mL water with a little acetic acid; add 3 g KI.","Titrate with thiosulphate to pale yellow; add starch.","Near the end add KSCN; titrate to cream-white. Calculate %."],
+ sim:{kind:"titr",trials:[S_THIO,{k:"assay",tk:"thio",title:"Assay of copper sulphate pentahydrate",ind:"Starch",col:iodo("#f1ead8","Cream-white (CuI/CuSCN)",1),
+  prep:["Weigh about 0.6 g of CuSO₄·5H₂O accurately; dissolve in 50 mL water with 4 mL acetic acid.","Add 3 g KI (excess); iodine is liberated and CuI precipitates.","Titrate to a pale yellow; add starch; near the end add 2 g KSCN; continue to cream-white."],
+  inp:{l:"CuSO₄·5H₂O taken",u:"mg",min:500,max:700,def:600,st:1},eq:249.68,gen:rngs(98.0,101.0),need:(i,h)=>i.a*h.P/100/249.68,
+  acts:[{id:"ki",l:"Add 3 g KI (excess) and mix",must:1,block:1,why:"Iodine must be liberated first."},{id:"starch",l:"Add starch solution",starch:1},{id:"kscn",l:"Add 2 g KSCN",minP:0.9}],note:"1 mL of 0.1 M Na₂S₂O₃ ≡ 24.97 mg CuSO₄·5H₂O.",unitR:"% CuSO₄·5H₂O"}]},
+ viva:[VQ("Why is KSCN added near the end of the copper titration?",["CuI adsorbs iodine; CuSCN adsorbs less, sharpening the end point","To reduce Cu²⁺","To oxidise iodide"],0,"It prevents premature/fading end points."),VQ("When is starch added?",["Near the end, when the solution is pale yellow","At the start","After the end point"],0,"Early starch binds iodine too strongly."),VQ("1 mL of 0.1 M thiosulphate corresponds to … CuSO₄·5H₂O",["24.97 mg","2.497 mg","249.7 mg"],0,"1 mmol Cu²⁺ ≡ 1 mmol S₂O₃²⁻ × 249.68 mg × 0.1.")]});
+
+const S_ZN={k:"std",tk:"edta",title:"Standardise 0.05 M disodium edetate with zinc",ind:"Eriochrome black T",col:COL.ebt,
+ prep:["Weigh about 0.3 g of zinc metal; dissolve in dilute HCl with a few drops of bromine water; boil off excess bromine; make up to 100 mL.","Pipette 25.0 mL into a conical flask; neutralise with ammonia and add 5 mL ammonia–ammonium chloride buffer (pH 10).","Add EBT; titrate with EDTA until wine-red turns blue."],
+ inp:{l:"Zinc weighed (made to 100 mL)",u:"mg",min:250,max:400,def:300,st:1},eq:65.38,need:i=>i.a/65.38/4,note:"Zn²⁺ + H₂Y²⁻ → ZnY²⁻ + 2 H⁺ (1 : 1). 1 mL of 0.05 M EDTA ≡ 3.269 mg Zn. Only a 25 mL aliquot (¼) is titrated."};
+EXPS.push({id:"A4",u:4,t:"Assay of calcium gluconate by complexometry",
+ aim:"To standardise 0.05 M disodium edetate and assay calcium gluconate by complexometric titration.",
+ th:`<p>EDTA forms a stable 1 : 1 complex with Ca²⁺. At pH 12 (NaOH), magnesium is precipitated and only calcium is titrated; hydroxy naphthol blue changes from red-violet to blue when all Ca²⁺ is complexed.</p>
+ <div class="rx">Ca²⁺ + H₂Y²⁻ → CaY²⁻ + 2 H⁺</div>
+ <ul><li><b>Factor:</b> 1 mL of 0.05 M EDTA ≡ <b>22.42 mg</b> calcium gluconate monohydrate (M = 448.4); 21.52 mg for the anhydrous form (430.4).</li><li>Method (USP-style): dissolve the sample in 150 mL water with 2 mL 3 N HCl; <b>add about 30 mL of EDTA first</b>, then 15 mL 1 N NaOH and the indicator, and titrate to blue; run a <b>blank</b>.</li><li>EDTA is standardised against zinc (EBT, pH 10 buffer).</li></ul>`,
+ req:"EDTA, zinc, calcium gluconate, HCl, NaOH, ammonia buffer, EBT, hydroxy naphthol blue, burette.",
+ steps:["Standardise EDTA with zinc.","Dissolve about 0.8 g calcium gluconate in 150 mL water + 2 mL 3 N HCl.","Add 30 mL EDTA, then 15 mL 1 N NaOH and 300 mg hydroxy naphthol blue.","Titrate to blue; run a blank; calculate %."],
+ sim:{kind:"titr",trials:[S_ZN,{k:"assay",tk:"edta",title:"Assay of calcium gluconate (monohydrate)",ind:"Hydroxy naphthol blue",col:(p,c)=>c.done.ind?COL.hnb(p):[CL,"Colourless (indicator not yet added)"],
+  prep:["Weigh about 0.8 g of calcium gluconate accurately; dissolve in 150 mL water containing 2 mL of 3 N HCl.","Add about 30 mL of EDTA from the burette while stirring.","Add 15 mL of 1 N NaOH and 300 mg hydroxy naphthol blue; titrate to a blue end point."],
+  inp:{l:"Calcium gluconate taken",u:"mg",min:700,max:900,def:800,st:1},eq:448.4,gen:rngs(98.0,101.0),need:(i,h)=>i.a*h.P/100/448.4,
+  acts:[{id:"ind",l:"Add 15 mL 1 N NaOH + hydroxy naphthol blue",minV:30,must:1,why:"Indicator added too late or not at all."}],blank:{k:"blank",min:0.05,max:0.15},note:"1 mL of 0.05 M EDTA ≡ 22.42 mg calcium gluconate monohydrate.",unitR:"% calcium gluconate·H₂O"}]},
+ viva:[VQ("Why is NaOH added (pH ≈ 12) in this assay?",["To precipitate Mg(OH)₂ and make the indicator work for Ca","To dissolve the sample","To oxidise Ca²⁺"],0,"Mg is masked as hydroxide; indicator is selective for Ca at high pH."),VQ("Calcium : EDTA ratio?",["1 : 1","1 : 2","2 : 1"],0,"EDTA complexes metals 1 : 1."),VQ("EBT end point colour change?",["Wine red → blue","Blue → red","Colourless → pink"],0,"Metal–EBT is wine red; free EBT is blue at pH 10.")]});
+
+const S_OX={k:"std",tk:"kmno4",title:"Standardise 0.02 M KMnO₄ with sodium oxalate",ind:"Self-indicating (KMnO₄)",col:COL.self,
+ prep:["Dry sodium oxalate at 105 °C; weigh about 0.2 g accurately.","Dissolve in 100 mL water; add 30 mL dilute H₂SO₄; warm to about 70 °C.","Titrate with KMnO₄ (first drops decolourise slowly; Mn²⁺ then autocatalyses) to a faint permanent pink."],
+ inp:{l:"Sodium oxalate taken",u:"mg",min:150,max:250,def:200,st:1},eq:335,need:i=>i.a/335,note:"2 MnO₄⁻ + 5 C₂O₄²⁻ + 16 H⁺ → 2 Mn²⁺ + 10 CO₂ + 8 H₂O. 1 mL of 0.02 M KMnO₄ ≡ 6.70 mg Na₂C₂O₄."};
+EXPS.push({id:"A5",u:4,t:"Assay of hydrogen peroxide by permanganometry",
+ aim:"To standardise 0.02 M potassium permanganate and assay hydrogen peroxide solution by permanganometry.",
+ th:`<p>In acid solution, permanganate oxidises hydrogen peroxide (which acts as a reducing agent here) to oxygen. KMnO₄ is its own indicator: the first excess gives a faint permanent pink.</p>
+ <div class="rx">2 MnO₄⁻ + 5 H₂O₂ + 6 H⁺ → 2 Mn²⁺ + 5 O₂ + 8 H₂O</div>
+ <ul><li><b>Factor:</b> 1 mL of 0.02 M KMnO₄ ≡ <b>1.701 mg</b> H₂O₂ (M = 34.01).</li><li><b>Volume strength:</b> 1 mL of "20-volume" H₂O₂ gives 20 mL O₂ at STP ≈ 6.07 % w/v; volume strength ≈ 3.30 × % w/v.</li><li>Use <b>sulphuric acid</b> only: HCl is oxidised to Cl₂, HNO₃ is itself an oxidant. Without acid, brown MnO₂ forms.</li><li>Standardise KMnO₄ against sodium oxalate at about 70 °C.</li></ul>`,
+ req:"KMnO₄, sodium oxalate, H₂O₂ (about 6 % w/v), dilute H₂SO₄, burette, pipettes.",
+ steps:["Standardise KMnO₄ with sodium oxalate.","Dilute the H₂O₂ solution 1 in 10 with water.","Take 10 mL of the dilution, add 20 mL dilute H₂SO₄.","Titrate with KMnO₄ to a faint permanent pink; calculate % w/v and volume strength."],
+ sim:{kind:"titr",trials:[S_OX,{k:"assay",tk:"kmno4",title:"Assay of hydrogen peroxide solution",ind:"Self-indicating (KMnO₄)",col:COL.self,
+  prep:["Dilute the H₂O₂ solution (about 6 % w/v) 1 in 10 with water.","Pipette the stated volume of the dilution into a flask.","Add 20 mL of dilute H₂SO₄; titrate with KMnO₄ to a faint permanent pink."],
+  inp:{l:"Diluted H₂O₂ taken",u:"mL",min:8,max:12,def:10,st:0.5},eq:85.035,gen:rngs(5.5,6.5),need:(i,h)=>i.a*h.P/85.035,
+  acts:[{id:"acid",l:"Add 20 mL dilute sulphuric acid",must:1,err:0.6,why:"No acid: brown MnO₂ forms and the end point is unreliable (+0.6 mL)."}],
+  res:(V,M,i)=>{const mg=V*M*85.035;const w=mg/i.a;return{pct:w,lab:"% w/v H₂O₂",extra:"Volume strength ≈ "+fx(w*3.295,1)+" vol"}},truth:(i,h)=>h.P,note:"1 mL of 0.02 M KMnO₄ ≡ 1.701 mg H₂O₂. % w/v = mg per mL of the 1 in 10 dilution (numerically).",unitR:"% w/v H₂O₂"}]},
+ viva:[VQ("Why is HCl not used to acidify in permanganometry?",["It is oxidised by KMnO₄ to Cl₂","It is too weak","It precipitates Mn²⁺"],0,"Chloride is oxidised, giving a high titre."),VQ("The indicator in permanganometry is…",["KMnO₄ itself","Starch","Phenolphthalein"],0,"Self-indicator: faint pink persists."),VQ("20-volume H₂O₂ is about … % w/v",["6","20","0.6"],0,"1 mL gives 20 mL O₂ ≈ 6.07 % w/v.")]});
+
+const S_HC={k:"std",tk:"hclo4",title:"Standardise 0.1 M perchloric acid with potassium hydrogen phthalate",ind:"Crystal violet",col:COL.cv,
+ prep:["Dry KHP at 120 °C; weigh about 0.35 g accurately.","Dissolve in 50 mL anhydrous glacial acetic acid, warming if needed.","Add 2 drops of crystal violet; titrate with HClO₄ to emerald green (violet → blue → blue-green → green)."],
+ inp:{l:"KHP taken",u:"mg",min:300,max:450,def:350,st:1},eq:204.22,need:i=>i.a/204.22,note:"KHP behaves as a base in acetic acid. 1 mL of 0.1 M HClO₄ ≡ 20.42 mg KHP. Acetic acid expands ≈ 0.11 % per °C: correct the molarity if the temperature differs from standardisation."};
+EXPS.push({id:"A6",u:4,t:"Assay of sodium benzoate by non-aqueous titration",
+ aim:"To standardise 0.1 M perchloric acid and assay sodium benzoate by non-aqueous (acidimetric) titration in glacial acetic acid.",
+ th:`<p>Benzoate is far too weak a base to titrate in water. In glacial acetic acid (a protogenic solvent) it behaves as a much stronger base, and perchloric acid in acetic acid is a very strong acid, giving a sharp end point with crystal violet.</p>
+ <div class="rx">C₆H₅COONa + HClO₄ → C₆H₅COOH + NaClO₄</div>
+ <ul><li><b>Factor:</b> 1 mL of 0.1 M HClO₄ ≡ <b>14.41 mg</b> sodium benzoate (M = 144.11). Pharmacopoeial limit (USP): 99.0–100.5 % (anhydrous basis).</li><li><b>Crystal violet</b>: violet (basic) → blue → blue-green → green (acidic/neutral end point).</li><li>Apparatus must be perfectly dry (water leaches the end point). Run a <b>blank</b> on the solvent.</li></ul>`,
+ req:"0.1 M HClO₄ in glacial acetic acid, anhydrous glacial acetic acid, KHP, sodium benzoate, crystal violet, dry burette and flasks.",
+ steps:["Standardise HClO₄ with KHP.","Dissolve about 0.25 g sodium benzoate in 50 mL anhydrous glacial acetic acid.","Add crystal violet; titrate to emerald green.","Run a blank; calculate % sodium benzoate."],
+ sim:{kind:"titr",trials:[S_HC,{k:"assay",tk:"hclo4",title:"Assay of sodium benzoate",ind:"Crystal violet",col:COL.cv,
+  prep:["Weigh about 0.25 g of sodium benzoate accurately; dissolve in 50 mL anhydrous glacial acetic acid.","Add 2 drops of crystal violet solution.","Titrate with 0.1 M HClO₄ to emerald green; repeat with a blank."],
+  inp:{l:"Sodium benzoate taken",u:"mg",min:200,max:300,def:250,st:1},eq:144.11,gen:rngs(98.6,100.6),need:(i,h)=>i.a*h.P/100/144.11,blank:{k:"blank",min:0.1,max:0.25},note:"1 mL of 0.1 M HClO₄ ≡ 14.41 mg sodium benzoate.",unitR:"% sodium benzoate"}]},
+ viva:[VQ("Why is sodium benzoate titrated in glacial acetic acid?",["Benzoate is too weak a base in water; acetic acid enhances its basicity","Benzoate is insoluble in water","HClO₄ is only soluble in acetic acid"],0,"A protogenic solvent levels basic strength upward."),VQ("End point colour with crystal violet?",["Emerald green","Pink","Colourless"],0,"Violet → blue → blue-green → green."),VQ("Why a blank titration?",["To correct for the solvent/indicator","To standardise","To dry the flask"],0,"Acetic acid and indicator consume a little titrant.")]});
+
+EXPS.push({id:"A7",u:4,t:"Assay of sodium chloride by precipitation titration (modified Volhard)",
+ aim:"To standardise 0.1 M ammonium thiocyanate and assay sodium chloride by the modified Volhard method.",
+ th:`<p>An excess of standard silver nitrate is added to the chloride; the unreacted silver is back-titrated with ammonium thiocyanate using ferric ammonium sulphate as indicator.</p>
+ <div class="rx">Ag⁺ + Cl⁻ → AgCl↓ (white)<br>Ag⁺(excess) + SCN⁻ → AgSCN↓<br>Fe³⁺ + SCN⁻ → [Fe(SCN)]²⁺ (red-brown) – end point</div>
+ <ul><li><b>Factor:</b> 1 mL of 0.1 M AgNO₃ ≡ <b>5.844 mg</b> NaCl (M = 58.44).</li><li><b>Nitric acid</b> prevents hydrolysis of Fe³⁺ and interference of carbonate/phosphate.</li><li><b>Modification:</b> AgCl is more soluble than AgSCN, so thiocyanate would slowly react with the AgCl and the colour would fade. Shaking with <b>nitrobenzene</b> (or filtering off AgCl) coats the precipitate and prevents this.</li><li>Calculation: mmol Cl⁻ = mmol Ag⁺ added − mmol SCN⁻ used.</li></ul>`,
+ req:"0.1 M AgNO₃ (standardised), 0.1 M NH₄SCN, ferric ammonium sulphate indicator, dilute HNO₃, nitrobenzene, burette.",
+ steps:["Standardise NH₄SCN with 0.1 M AgNO₃.","Dissolve about 0.12 g NaCl in 50 mL water; add 5 mL dilute HNO₃ and an accurately measured excess of AgNO₃.","Add 3 mL nitrobenzene and shake vigorously; add ferric alum.","Titrate with NH₄SCN to a permanent reddish-brown; calculate % NaCl."],
+ sim:{kind:"titr",trials:[{k:"std",tk:"scn",title:"Standardise 0.1 M NH₄SCN with 0.1 M AgNO₃",ind:"Ferric ammonium sulphate",col:COL.volh,
+  prep:["Pipette the stated volume of standard 0.1 M AgNO₃ (F = 1.000) into a flask.","Add 5 mL dilute HNO₃ and 2 mL of ferric ammonium sulphate indicator.","Titrate with NH₄SCN with vigorous shaking to a permanent reddish-brown."],
+  inp:{l:"0.1 M AgNO₃ taken",u:"mL",min:20,max:30,def:25,st:0.5},eq:1,need:i=>i.a*0.1,note:"Ag⁺ + SCN⁻ → AgSCN. M(NH₄SCN) = (V × 0.1) ÷ V(NH₄SCN)."},
+  {k:"assay",tk:"scn",title:"Assay of sodium chloride",ind:"Ferric ammonium sulphate",col:COL.volh,
+  prep:["Weigh about 0.12 g of NaCl accurately; dissolve in 50 mL water.","Add 5 mL dilute HNO₃ and an excess of standard 0.1 M AgNO₃ (volume below).","Add 3 mL nitrobenzene; shake until the AgCl coagulates; add 2 mL ferric alum.","Titrate the excess Ag⁺ with NH₄SCN to a permanent reddish-brown."],
+  inp:{l:"NaCl taken",u:"mg",min:100,max:150,def:120,st:1},inp2:{l:"0.1 M AgNO₃ added",u:"mL",min:10,max:50,def:30,st:0.5},eq:58.44,gen:rngs(98.6,100.8),
+  need:(i,h,j)=>j.a*0.1-i.a*h.P/100/58.44,
+  acts:[{id:"hno3",l:"Add 5 mL dilute HNO₃ + 2 mL ferric ammonium sulphate",must:1,err:0.2,why:"No nitric acid: Fe³⁺ hydrolyses and the colour is unreliable (+0.2 mL)."},{id:"nitro",l:"Add 3 mL nitrobenzene and shake",must:1,err:0.6,why:"No nitrobenzene: SCN⁻ reacts with AgCl and the colour fades, so too much titrant is used (+0.6 mL)."}],
+  res:(V,M,i,j)=>{const cl=j.a*0.1-V*M;const mg=cl*58.44;return{pct:mg/i.a*100,lab:"% NaCl",extra:"Cl⁻ = "+fx(cl,3)+" mmol (Ag⁺ added − SCN⁻ used)"}},note:"1 mL of 0.1 M AgNO₃ ≡ 5.844 mg NaCl. Excess AgNO₃ must be more than the chloride present.",unitR:"% NaCl"}]},
+ viva:[VQ("Why is nitrobenzene added?",["To coat AgCl so SCN⁻ cannot convert it to AgSCN","To dissolve AgCl","As an indicator"],0,"AgCl is more soluble than AgSCN."),VQ("Why is the Volhard titration done in nitric acid?",["Prevents hydrolysis of Fe³⁺","To oxidise chloride","To precipitate AgCl"],0,"In neutral solution Fe³⁺ forms Fe(OH)₃."),VQ("Indicator?",["Ferric ammonium sulphate","Starch","Crystal violet"],0,"Fe³⁺ gives red-brown [Fe(SCN)]²⁺.")]});
+
+/* ===== UNIT 3 (3): KI ===== */
+EXPS.push({id:"T3",u:3,t:"Determination of potassium iodate and iodine in potassium iodide",
+ aim:"To determine the free iodine and the iodate present as impurities in potassium iodide by thiosulphate titration.",
+ th:`<p>Potassium iodide can oxidise on storage, giving traces of free iodine and iodate. Both are determined by thiosulphate titration of iodine.</p>
+ <div class="rx">I₂ + 2 S₂O₃²⁻ → 2 I⁻ + S₄O₆²⁻ (free iodine, neutral solution)<br>IO₃⁻ + 5 I⁻ + 6 H⁺ → 3 I₂ + 3 H₂O (iodate, only after acidifying)<br>3 I₂ + 6 S₂O₃²⁻ → 6 I⁻ + 3 S₄O₆²⁻</div>
+ <ul><li><b>Step 1 (free iodine):</b> dissolve KI in freshly boiled, cooled water; titrate with 0.01 M thiosulphate, adding starch near the end.</li><li><b>Step 2 (iodate):</b> to the same solution add dilute H₂SO₄; the iodate liberates iodine from the excess iodide (blue with starch); titrate again.</li><li><b>Factors (0.01 M thiosulphate, derived from stoichiometry):</b> 1 mL ≡ <b>1.269 mg I₂</b>; 1 mL ≡ <b>0.3567 mg KIO₃</b> (1 mol KIO₃ ≡ 6 mol S₂O₃²⁻).</li><li>Iodate does not react in neutral solution, so the two determinations are independent.</li></ul>
+ <p class="small mut">Impurity levels in the model samples are teaching values; pharmacopoeial KI limits for iodate are given as qualitative tests in the IP.</p>`,
+ req:"KI, 0.01 M sodium thiosulphate, dilute H₂SO₄, starch, freshly boiled and cooled water, burette.",
+ steps:["Dissolve about 5 g KI in 50 mL freshly boiled and cooled water.","Titrate any free iodine with 0.01 M thiosulphate (starch near the end).","Add 2 mL dilute H₂SO₄ to the same solution; titrate the iodine liberated by iodate.","Calculate % w/w of I₂ and KIO₃."],
+ sim:{kind:"titr",trials:[{k:"assay",tk:"thio01",title:"Part 1: free iodine in potassium iodide",ind:"Starch",col:iodo("#f4fbfb","Colourless"),
+  prep:["Dissolve about 5 g of KI in 50 mL freshly boiled and cooled water.","Titrate with 0.01 M thiosulphate until pale yellow; add starch; titrate until colourless."],
+  inp:{l:"KI taken",u:"mg",min:4000,max:6000,def:5000,st:10},eq:126.9,gen:rngs(0.03,0.08),need:(i,h)=>i.a*h.P/100/253.81*2,acts:[{id:"starch",l:"Add starch solution",starch:1}],
+  res:(V,M,i)=>{const mg=V*M*126.9;return{pct:mg/i.a*100,lab:"% w/w I₂",extra:"I₂ = "+fx(mg,2)+" mg in "+fx(i.a/1000,2)+" g KI"}},note:"1 mL of 0.01 M thiosulphate ≡ 1.269 mg I₂.",unitR:"% w/w I₂",dec:3},
+  {k:"assay",tk:"thio01",title:"Part 2: iodate in potassium iodide",ind:"Starch",col:iodo("#f4fbfb","Colourless"),
+  prep:["Use a fresh sample as in Part 1 (or continue with the same solution after Part 1).","Add 2 mL of dilute sulphuric acid: iodate liberates iodine (blue colour with starch).","Titrate with 0.01 M thiosulphate until the blue colour disappears."],
+  inp:{l:"KI taken",u:"mg",min:4000,max:6000,def:5000,st:10},eq:35.67,gen:rngs(0.02,0.06),need:(i,h)=>i.a*h.P/100/214.0*6,
+  acts:[{id:"acid",l:"Add 2 mL dilute H₂SO₄ (liberates iodine from iodate)",must:1,block:1,why:"In neutral solution iodate does not react."},{id:"starch",l:"Add starch solution",starch:1,early:0}],
+  res:(V,M,i)=>{const mg=V*M*35.67;return{pct:mg/i.a*100,lab:"% w/w KIO₃",extra:"KIO₃ = "+fx(mg,2)+" mg in "+fx(i.a/1000,2)+" g KI"}},note:"1 mL of 0.01 M thiosulphate ≡ 0.3567 mg KIO₃.",unitR:"% w/w KIO₃",dec:3}]},
+ viva:[VQ("Why must the KI be dissolved in freshly boiled and cooled water?",["Dissolved CO₂/O₂ would liberate iodine from iodide","To dissolve more KI","To adjust pH"],0,"Air oxidises iodide to iodine."),VQ("Why is the solution acidified before the second titration?",["Iodate only liberates iodine from iodide in acid","To destroy starch","To remove thiosulphate"],0,"IO₃⁻ + 5I⁻ + 6H⁺ → 3I₂ + 3H₂O."),VQ("Mole ratio KIO₃ : S₂O₃²⁻?",["1 : 6","1 : 2","1 : 1"],0,"Each iodate gives 3 I₂, each needing 2 thiosulphate.")]});
+EXPS.sort((a,b)=>a.u-b.u||(a.id<b.id?-1:1));
+/* ===== GLOBAL STATE ===== */
+const S={sel:null,tab:"aim",done:{},rec:[],st:{},M:{},hm:{},name:"",roll:""};
+const EX=id=>EXPS.find(e=>e.id===id);
+function addRec(id,line){const e=EX(id);S.rec=S.rec.filter(r=>!(r.id===id&&r.k===line.k));S.rec.push(Object.assign({id,title:e.t,u:e.u},line));S.done[id]=1}
+const msgH=m=>m?`<div class="${m.c||"note"}">${m.t}</div>`:"";
+
+/* ===== LIMIT TEST ENGINE ===== */
+function limInit(e){const L=e.sim,r=rng(e.id);return{s:0,mode:"std",pre:null,step:0,ask:null,mist:0,waited:false,bg:L.bg,dec:null,w:L.wt,msg:null,j:[0,1,2,3].map(()=>1+(r()-0.5)*0.1)}}
+const SIMS=e=>S.st[e.id]||(S.st[e.id]=e.sim.kind==="limit"?limInit(e):{});
+function limCur(e){const L=e.sim,st=SIMS(e),list=st.mode==="mod"?L.mod.samples:L.samples,sm=list[st.s],wrong=st.mode==="mod"&&st.pre!==null&&st.pre!==L.mod.right[st.s];
+ const rT=sm.r*st.j[st.s]*(st.w/L.wt);const rObs=rT+(wrong?L.mod.pen:0);return{list,sm,wrong,rT,rObs}}
+const fI=r=>1-Math.exp(-1.1*r);
+function limSVG(e,st,c){const L=e.sim,n=L.steps.length,fin=st.step>=n-1,tf=st.waited?1:(fin?0.25:0);
+ const lastF=st.step>0?L.steps[st.step-1].f:0,lvl=st.step===0?0:0.18+0.78*lastF;
+ const bgc=st.bg==="black"?"#0b0b0d":"#f7f7f4";
+ const hz=(r)=>{const f=fI(r)*tf;
+  if(L.effect==="white")return st.bg==="black"?`rgba(255,255,255,${0.9*f})`:`rgba(110,120,130,${0.6*f})`;
+  if(L.effect==="purple")return`hsla(${330-45*f},70%,${70-30*f}%,${0.2+0.75*f})`;
+  return`hsla(28,60%,${55-30*f}%,${0.12+0.82*f})`};
+ const base=st.bg==="black"?"rgba(130,170,210,0.16)":"rgba(205,225,240,0.35)";
+ if(L.effect==="stain"){const strip=(x,r,lab)=>{const f=fI(r)*tf,hh=14+38*Math.min(r,3.2)*tf;return`<rect x="${x}" y="30" width="46" height="190" rx="4" fill="#fbfbf8" stroke="#bbb"/><rect x="${x+4}" y="${216-hh}" width="38" height="${hh}" rx="3" fill="hsl(${52-26*f},${50+30*f}%,${82-44*f}%)" opacity="${tf?1:0}"/><text x="${x+23}" y="244" text-anchor="middle" font-size="13" fill="#444">${lab}</text>`};
+  return`<svg viewBox="0 0 360 256" width="100%" style="max-width:380px;background:#fff;border-radius:10px"><text x="180" y="18" text-anchor="middle" font-size="12" fill="#666">Mercuric chloride paper strips after the test</text>${strip(80,c.rObs,"Test")}${strip(234,1,"Standard")}</svg>`}
+ const cyl=(x,r,lab,tint)=>{const hh=Math.round(176*lvl);return`<rect x="${x}" y="30" width="70" height="190" rx="8" fill="none" stroke="#9aa" stroke-width="2"/>${hh>0?`<rect x="${x+3}" y="${217-hh}" width="64" height="${hh}" rx="4" fill="${tint||base}"/><rect x="${x+3}" y="${217-hh}" width="64" height="${hh}" rx="4" fill="${hz(r)}"/>`:""}<text x="${x+35}" y="244" text-anchor="middle" font-size="13" fill="${st.bg==="black"?"#ddd":"#444"}">${lab}</text><text x="${x+35}" y="26" text-anchor="middle" font-size="10" fill="#889">50 mL</text>`};
+ const tint=c.wrong&&c.sm.d.includes("coloured")?"rgba(150,20,140,0.4)":null;
+ return`<svg viewBox="0 0 360 256" width="100%" style="max-width:380px;border-radius:10px;background:${bgc}">${cyl(70,c.rObs,"Test",tint)}${cyl(220,1,"Standard")}</svg>`}
+function limHTML(e){const L=e.sim,st=SIMS(e),c=limCur(e),n=L.steps.length,hasMod=!!L.mod,pre=st.mode==="mod"&&st.pre===null,started=st.step>0;
+ let h=`<div class="note"><b>Standard:</b> ${L.stdTxt}. Specified quantity of sample: <b>${L.wt.toFixed(2)} g</b>. Permitted limit at that weight: <b>${fx(L.std/(L.wt*1000)*100,4)} %</b> (${fx(L.std/L.wt*1000,0)} ppm).</div>`;
+ if(hasMod)h+=`<div class="tabs"><button class="${st.mode==="std"?"on":""}" data-a="lmode" data-id="${e.id}" data-v="std">Limit test</button><button class="${st.mode==="mod"?"on":""}" data-a="lmode" data-id="${e.id}" data-v="mod">Modified limit test</button></div>`;
+ h+=`<div class="row"><span class="small mut">Sample:</span>${c.list.map((s,i)=>`<button class="${i===st.s?"b":"g"}" data-a="lsamp" data-id="${e.id}" data-v="${i}">${s.n}</button>`).join("")}</div><div class="small mut" style="margin:4px 0">${c.sm.d}</div>`;
+ h+=`<div class="row"><label>Weigh sample (g) <input type="number" step="0.01" min="0.1" max="5" value="${st.w}" data-k="w" data-id="${e.id}" ${started?"disabled":""}></label>${started?`<button class="g" data-a="lreset" data-id="${e.id}">Start again</button>`:""}</div>`;
+ if(pre){h+=`<h3>How must this sample be prepared before the test?</h3>`+L.mod.opts.map((o,i)=>`<button class="g opt" data-a="lpre" data-id="${e.id}" data-v="${i}">${o}</button>`).join("")+`<div class="small mut">Choose the treatment that suits the sample type.</div>`}
+ else{h+=`<h3>Procedure</h3><ol class="steps">`+L.steps.map((s,i)=>`<li class="${i<st.step?"done":""}">${s.t}${i===st.step&&st.ask!==i?` <button class="b" data-a="lstep" data-id="${e.id}">Do this</button>`:""}</li>`).join("")+`</ol>`;
+  if(st.ask!==null){const a=L.steps[st.ask].ask;h+=`<div class="note"><b>${a.q}</b>${a.o.map((o,i)=>`<button class="g opt" data-a="lask" data-id="${e.id}" data-v="${i}">${o}</button>`).join("")}</div>`}
+  if(st.mode==="mod"&&st.pre!==null&&!c.wrong&&st.step===0)h+=`<div class="okb">Sample prepared appropriately.</div>`;
+  if(st.mode==="mod"&&c.wrong&&st.step===0)h+=`<div class="warn">You chose a treatment that may not suit this sample type. Continue if you wish; observe what happens.</div>`}
+ h+=msgH(st.msg);
+ if(st.step>0||st.waited){h+=`<div class="grid2"><div>${limSVG(e,st,c)}<div class="row small"><span class="mut">View against:</span><button class="${st.bg==="black"?"b":"g"}" data-a="lbg" data-id="${e.id}" data-v="black">Black</button><button class="${st.bg==="white"?"b":"g"}" data-a="lbg" data-id="${e.id}" data-v="white">White</button></div></div><div>`;
+  if(st.waited&&st.dec===null)h+=`<h3>Observation</h3><p>Compare the ${L.effect==="stain"?"stains":L.effect==="white"?(e.id==="L1"?"opalescence":"turbidity"):"colour intensity"} of the <b>Test</b> and <b>Standard</b>. Is the Test <b>not greater</b> than the Standard?</p><div class="row"><button class="b" data-a="ldec" data-id="${e.id}" data-v="pass">Complies (Test ≤ Standard)</button><button class="g" data-a="ldec" data-id="${e.id}" data-v="fail">Does not comply (Test &gt; Standard)</button></div>`;
+  else if(!st.waited&&st.step===n-1&&st.ask===null)h+=`<p class="mut">The last step is a waiting period (${L.wait}); continue to time-lapse it.</p>`;
+  if(st.dec!==null){const ok=(st.dec==="pass")===(c.rT<=1);const mg=c.rT*L.std;
+   h+=`<div class="${ok?"okb":"badb"}"><b>${ok?"Correct decision.":"Incorrect decision."}</b> Impurity in the sample: ${fx(mg,3)} ${L.unit} per ${fx(st.w,2)} g (${fx(mg/(st.w*1000)*100,4)} %), against the standard's ${fx(L.std,3)} ${L.unit}. Ratio Test : Standard = <b>${fx(c.rT,2)}</b> → the sample ${c.rT<=1?"<b>complies</b>":"<b>does not comply</b>"}.</div>`;
+   if(c.wrong)h+=`<div class="warn">Your pre-treatment did not suit this sample, so the cylinder looked different from the true result (apparent ratio ${fx(c.rObs,2)}). Correct treatment: <b>${L.mod.opts[L.mod.right[st.s]]}</b>.</div>`;
+   if(st.mist)h+=`<div class="warn">Mistakes during the procedure: ${st.mist}.</div>`;
+   h+=`<button class="g" data-a="lreset" data-id="${e.id}">Test another sample</button>`}
+  h+=`</div></div>`}
+ return h}
+function limAct(a,d){const e=EX(d.id),L=e.sim,st=SIMS(e),n=L.steps.length;
+ if(a==="lmode"){S.st[e.id]=Object.assign(limInit(e),{mode:d.v});return}
+ if(a==="lsamp"){const m=st.mode;S.st[e.id]=Object.assign(limInit(e),{mode:m,s:+d.v,bg:st.bg});return}
+ if(a==="lreset"){S.st[e.id]=Object.assign(limInit(e),{mode:st.mode,s:st.s,bg:st.bg});return}
+ if(a==="lpre"){st.pre=+d.v;return}
+ if(a==="lbg"){st.bg=d.v;return}
+ if(a==="lstep"){const s=L.steps[st.step];if(s.ask&&st.ask===null){st.ask=st.step;st.msg=null;return}
+  if(s.wait){st.waited=true;st.step++;st.msg={c:"note",t:"Time-lapse: "+L.wait+" have passed."};return}
+  st.step++;st.msg=null;return}
+ if(a==="lask"){const s=L.steps[st.ask],ok=+d.v===s.ask.ok;if(ok){st.step=st.ask+1;st.ask=null;st.msg={c:"okb",t:s.ask.why}}else{st.mist++;st.msg={c:"badb",t:"Not quite. "+s.ask.why}}return}
+ if(a==="ldec"){st.dec=d.v;const c=limCur(e),ok=(d.v==="pass")===(c.rT<=1);addRec(e.id,{k:st.mode,sample:c.sm.n+(st.mode==="mod"?" (modified test)":""),res:"Ratio test:standard "+fx(c.rT,2)+" → "+(c.rT<=1?"complies":"does not comply"),ok});return}}
+/* ===== TITRATION ENGINE ===== */
+function trs(e){if(e._trs)return e._trs;const o=[];e.sim.trials.forEach(t=>{o.push(t);if(t.blank)o.push({k:"blank",tk:t.tk,title:"Blank titration for: "+t.title.toLowerCase(),ind:t.ind,col:t.col,prep:["Repeat the titration with exactly the same quantities of all reagents and solvent, but without the sample.","The blank volume is subtracted from the sample titre."],inp:null,blankOf:t})});return e._trs=o}
+const trueM=tk=>{if(!(tk in S.hm)){const T=TT[tk],r=rng("M"+tk);S.hm[tk]=T.M*(1+(r()-0.5)*2*T.tol)}return S.hm[tk]};
+function tst(e,i){const st=SIMS(e);if(!st.t)st.t=[];if(!st.t[i]){const tr=trs(e)[i],r=rng(e.id+i);st.t[i]={a:tr.inp?tr.inp.def:0,b:tr.inp2?tr.inp2.def:0,V:0,off:0,done:{},rows:[],started:false,errV:0,hid:tr.gen?{P:tr.gen(r)}:{P:100},blankV:tr.blankOf?tr.blankOf.blank.min+(tr.blankOf.blank.max-tr.blankOf.blank.min)*r():0,msg:null,early:false,sub:null,notes:[]}}return st.t[i]}
+function veqOf(tr,t){if(tr.k==="blank")return t.blankV;const need=tr.need({a:t.a},t.hid,{a:t.b});if(!(need>0))return null;return need/trueM(tr.tk)+t.errV}
+function blankMean(e,tr){if(!tr.blank)return 0;const bi=trs(e).findIndex(x=>x.blankOf===tr),bt=tst(e,bi);return bt.sub?bt.sub.Vm:(bt.rows.length?bt.rows.reduce((s,r)=>s+r.v,0)/bt.rows.length:0)}
+function conc(rows){const v=rows.map(r=>r.v);for(let i=v.length-1;i>0;i--)for(let j=i-1;j>=0;j--)if(Math.abs(v[i]-v[j])<=0.101)return{Vm:(v[i]+v[j])/2,pair:[v[j],v[i]]};return null}
+const pOf=(V,ve)=>!ve?0:V<ve?V/ve:(V-ve<=0.055?1:1.004+(V-ve-0.055)/ve);
+function burSVG(V,off,col){const rd=Math.max(0,V-off),y=20+Math.min(rd,50)*5;
+ const ticks=Array.from({length:11},(_,i)=>`<line x1="${95-(i%2?6:10)}" x2="95" y1="${20+i*25}" y2="${20+i*25}" stroke="#778"/>${i%2===0?`<text x="${80-12}" y="${24+i*25}" font-size="10" fill="#667" text-anchor="end">${i*5}</text>`:""}`).join("");
+ const hw=Math.min(62,12+Math.max(0,(358-335))*0.77);
+ return`<svg viewBox="0 0 230 420" width="100%" style="max-width:250px"><rect x="95" y="14" width="30" height="268" rx="4" fill="rgba(255,255,255,.55)" stroke="#889" stroke-width="2"/><rect x="97" y="${y}" width="26" height="${272-y+10}" fill="#bcd6ee" opacity=".85"/>${ticks}<rect x="104" y="282" width="12" height="14" fill="#667"/><rect x="108" y="296" width="4" height="14" fill="#889"/>
+ <path d="M98 322 L98 342 L50 406 Q48 414 58 414 L162 414 Q172 414 170 406 L122 342 L122 322 Z" fill="rgba(255,255,255,.35)" stroke="#889" stroke-width="2"/><path d="M${110-30} 366 L${110+30} 366 L${110+62} 410 L${110-62} 410 Z" fill="${col}"/><text x="205" y="${Math.min(y+4,274)}" font-size="11" fill="#445" text-anchor="end" transform="translate(0 0)"></text></svg>`}
+function titHTML(e){const st=SIMS(e),T=trs(e);if(st.ti==null)st.ti=0;const tr=T[st.ti],t=tst(e,st.ti),veq=veqOf(tr,t),TTt=TT[tr.tk],M=S.M[tr.tk];
+ let h=`<div class="tabs">${T.map((x,i)=>`<button class="${i===st.ti?"on":""}" data-a="ttrial" data-id="${e.id}" data-v="${i}">${x.k==="std"?"Standardisation":x.k==="blank"?"Blank":(x.title.startsWith("Part")?x.title.split(":")[0]:"Assay")}</button>`).join("")}</div><h3 style="margin-top:0">${tr.title}</h3>`;
+ h+=`<div class="grid2"><div><div class="small mut"><b>Titrant:</b> ${TTt.txt}${tr.tk==="thio01"?"":" · <b>Indicator:</b> "+tr.ind}</div><ol class="steps" style="margin:6px 0 0 18px">${tr.prep.map(p=>`<li>${p}</li>`).join("")}</ol>`;
+ if(tr.inp){h+=`<div class="row" style="margin-top:8px"><label>${tr.inp.l} (${tr.inp.u}) <input type="number" data-k="a" data-id="${e.id}" value="${t.a}" min="${tr.inp.min}" max="${tr.inp.max}" step="${tr.inp.st}" ${t.started?"disabled":""}></label>${tr.inp2?`<label>${tr.inp2.l} (${tr.inp2.u}) <input type="number" data-k="b" data-id="${e.id}" value="${t.b}" min="${tr.inp2.min}" max="${tr.inp2.max}" step="${tr.inp2.st}" ${t.started?"disabled":""}></label>`:""}</div><div class="small mut">Allowed range ${tr.inp.min}–${tr.inp.max} ${tr.inp.u}${tr.inp.u==="mg"?" (weigh accurately; the balance is assumed exact)":""}.</div>`}
+ else h+=`<div class="small mut" style="margin-top:6px">No sample is taken in a blank.</div>`;
+ if(tr.acts)h+=`<div class="row" style="margin-top:8px">`+tr.acts.map(a=>{const dis=t.done[a.id]||(a.minV&&t.V<a.minV);return`<button class="${t.done[a.id]?"g":"b"}" ${dis?"disabled":""} data-a="tact" data-id="${e.id}" data-v="${a.id}">${t.done[a.id]?"✓ ":""}${a.l}</button>`}).join("")+`</div>`;
+ const p=pOf(t.V,veq),cl=veq?tr.col(p,{done:t.done}):[CL,"Colourless"];const lab=cl[1].split(" – ")[0];
+ h+=`<div class="row" style="margin-top:10px"><span class="small mut">Add titrant:</span><button class="g" data-a="tadd" data-id="${e.id}" data-v="10">+10 mL</button><button class="g" data-a="tadd" data-id="${e.id}" data-v="1">+1 mL</button><button class="g" data-a="tadd" data-id="${e.id}" data-v="0.2">+0.2 mL</button><button class="g" data-a="tadd" data-id="${e.id}" data-v="0.05">1 drop (0.05 mL)</button></div>`;
+ h+=msgH(t.msg);
+ h+=`<div class="row" style="margin-top:8px"><button class="b" data-a="trec" data-id="${e.id}" ${t.V>0?"":"disabled"}>Record burette reading</button><button class="g" data-a="tnew" data-id="${e.id}">New flask</button>${t.V-t.off>30?`<button class="g" data-a="trefill" data-id="${e.id}">Refill burette</button>`:""}</div></div>`;
+ h+=`<div style="text-align:center">${burSVG(t.V,t.off,cl[0])}<div class="big">${fx(Math.max(0,t.V-t.off),2)} mL</div><div class="small mut">Burette reading · flask: <b>${lab}</b></div></div></div>`;
+ if(t.rows.length){h+=`<h3>Observation table</h3><table><tr><th>#</th><th>Initial (mL)</th><th>Final (mL)</th><th>Titre (mL)</th>${t.rows.some(r=>r.over!=null)?"<th>Beyond true end point</th>":""}</tr>${t.rows.map((r,i)=>`<tr><td>${i+1}</td><td>0.00</td><td>${fx(r.v,2)}</td><td>${fx(r.v,2)}</td><td>${r.over>0.005?"+"+fx(r.over,2)+" mL":r.over<-0.005?fx(r.over,2)+" mL (stopped early)":"at end point"}</td></tr>`).join("")}</table>`;
+  const c=conc(t.rows);if(!c)h+=`<div class="note">Repeat until two titres agree within 0.10 mL (concordant).</div>`;
+  else h+=calcHTML(e,tr,t,c)}
+ return h}
+function calcHTML(e,tr,t,c){const Vm=c.Vm,T=TT[tr.tk];let h=`<div class="okb">Concordant titres: ${fx(c.pair[0],2)} and ${fx(c.pair[1],2)} mL → mean = <b>${fx(Vm,2)} mL</b>.</div><h3>Calculation</h3>`;
+ if(tr.k==="blank"){t.sub={Vm};return h+`<p>Blank titre = <b>${fx(Vm,2)} mL</b> (subtracted in the assay).</p>`+subBtn(e,tr,t,null)}
+ const j={a:t.b},i={a:t.a};
+ if(tr.k==="std"){const n=tr.need(i,{P:100},j),Mc=n/Vm,F=Mc/T.M;t.sub={Mc,Vm};S.M[tr.tk]=Mc;
+  h+=`<div class="rx">Amount of standard = ${fx(t.a,tr.inp.u==="mg"?1:2)} ${tr.inp.u}${tr.inp.u==="mg"&&tr.eq>1?" ÷ "+tr.eq+" mg per mmol":""} → <b>${fx(n,3)} mmol</b> of titrant<br>Molarity = ${fx(n,3)} mmol ÷ ${fx(Vm,2)} mL = <b>${fx(Mc,4)} M</b> (nominal ${T.M} M)<br>Factor F = ${fx(Mc,4)} ÷ ${T.M} = <b>${fx(F,4)}</b></div><div class="small mut">${tr.note}</div><div class="okb">This molarity (${fx(Mc,4)} M) is now used as the working value in the assay.</div>`;
+  return h+subBtn(e,tr,t,{Mc})}
+ const Muse=S.M[tr.tk]||T.M,bl=blankMean(e,tr),V=Vm-bl;let r;
+ if(tr.res)r=tr.res(V,Muse,i,j);else{const mg=V*Muse*tr.eq;r={pct:mg/t.a*100,lab:tr.unitR||"%",extra:"Amount found = "+fx(mg,2)+" mg"}}
+ t.sub={r,Vm,Muse};
+ h+=`<div class="rx">Titre${bl?" corrected for blank":""} = ${fx(Vm,2)}${bl?" − "+fx(bl,2)+" = "+fx(V,2):""} mL<br>Molarity of titrant used = ${fx(Muse,4)} M${S.M[tr.tk]?" (from your standardisation)":" (nominal – titrant NOT standardised; error up to ±1.5 %)"}<br>${r.extra}<br>Result = <b>${fx(r.pct,tr.dec||2)} ${r.lab}</b></div><div class="small mut">${tr.note}</div>`;
+ if(!S.M[tr.tk]&&tr.tk!=="thio01")h+=`<div class="warn">Standardise the titrant first for a reliable result.</div>`;
+ if(tr.blank&&!bl)h+=`<div class="warn">This assay requires a blank titration; run it in the Blank tab.</div>`;
+ return h+subBtn(e,tr,t,{r})}
+const subBtn=(e,tr,t,o)=>t.verdict?`<div class="${t.verdict.ok?"okb":"badb"}">${t.verdict.t}</div>`:`<button class="b" data-a="tsub" data-id="${e.id}">Submit result to the record</button>`;
+function tAct(a,d){const e=EX(d.id),st=SIMS(e),i=st.ti||0,tr=trs(e)[i],t=tst(e,i),veq=veqOf(tr,t);
+ if(a==="ttrial"){st.ti=+d.v;return}
+ if(a==="tnew"){Object.assign(t,{V:0,off:0,done:{},started:false,errV:0,msg:null,early:false});return}
+ if(a==="trefill"){t.off=t.V;t.msg={c:"note",t:"Burette refilled to 0.00 mL (cumulative titre is tracked)."};return}
+ if(a==="tact"){const ac=tr.acts.find(x=>x.id===d.v);t.done[ac.id]=1;const p=veq?t.V/veq:0;
+  if(ac.starch&&p<0.85&&t.V>0){t.errV+=0.3;t.msg={c:"warn",t:"Starch added too early: the starch–iodine complex binds iodine strongly (+0.3 mL error). Add it when the solution is pale straw yellow."}}
+  else if(ac.id==="kscn"&&p<0.85&&t.V>0){t.errV+=0.2;t.msg={c:"warn",t:"KSCN added too early (+0.2 mL error); add it near the end point."}}
+  else t.msg=ac.id==="ind"&&t.V<30?{c:"warn",t:"Add the indicator only after about 30 mL of titrant."}:{c:"note",t:ac.l+" – done."};return}
+ if(a==="tadd"){const amt=+d.v;if(veq==null&&tr.k!=="blank"){t.msg={c:"badb",t:"No excess reagent is left to titrate (all the silver is consumed by the chloride). Start a new flask with more AgNO₃."};return}
+  const blk=(tr.acts||[]).find(x=>x.block&&!t.done[x.id]);if(blk&&!t.started){t.msg={c:"warn",t:blk.why+" Do: "+blk.l+"."};return}
+  if(t.V-t.off+amt>50.001){t.msg={c:"warn",t:"The burette would overflow its 50 mL mark: refill it first."};return}
+  if(!t.started){if(tr.inp){t.a=Math.min(tr.inp.max,Math.max(tr.inp.min,t.a||tr.inp.def));if(tr.inp2)t.b=Math.min(tr.inp2.max,Math.max(tr.inp2.min,t.b||tr.inp2.def))}if(veqOf(tr,t)==null&&tr.k!=="blank"){t.msg={c:"badb",t:"No excess reagent is left to titrate (all the silver is consumed by the chloride). Start a new flask with more AgNO₃."};return}
+   t.started=true;let ex=0;(tr.acts||[]).forEach(x=>{if(x.must&&!x.block&&!t.done[x.id]&&x.err&&!x.minV){ex+=x.err;t.notes.push(x.why)}});t.errV=ex+t.errV}
+  t.V=Math.round((t.V+amt)*100)/100;const ve=veqOf(tr,t);t.msg=null;
+  if(ve&&t.V>ve+0.5)t.msg={c:"warn",t:"Well past the colour change. Record this as a rough run and repeat with a new flask, adding dropwise near the end."};return}
+ if(a==="trec"){const ve=veqOf(tr,t);t.rows.push({v:t.V,over:ve==null?null:t.V-ve});if(t.notes.length)t.msg={c:"warn",t:"Procedure errors in this titration: "+t.notes.join(" ")};else t.msg=null;
+  t.V=0;t.off=0;t.done={};t.started=false;t.errV=0;t.notes=[];return}
+ if(a==="tsub"){const c=conc(t.rows);if(!c||!t.sub)return;let ok,msg,res;
+  if(tr.k==="blank"){res="Blank titre "+fx(c.Vm,2)+" mL";ok=true;msg="Blank recorded: "+fx(c.Vm,2)+" mL (true "+fx(t.blankV,2)+" mL)."}
+  else if(tr.k==="std"){const tm=trueM(tr.tk),er=(t.sub.Mc-tm)/tm*100;ok=Math.abs(er)<=0.6;res="Molarity "+fx(t.sub.Mc,4)+" M (F "+fx(t.sub.Mc/TT[tr.tk].M,4)+")";msg=`Your molarity ${fx(t.sub.Mc,4)} M; true value ${fx(tm,4)} M; difference ${fx(er,2)} %. ${ok?"Within ±0.6 %: good standardisation.":"Outside ±0.6 %: check weighing, end-point overshoot and repeat."}`}
+  else{const tv=tr.truth?tr.truth({a:t.a},t.hid):t.hid.P,er=(t.sub.r.pct-tv)/tv*100,tol=tr.dec?12:1.0;ok=Math.abs(er)<=tol;res=fx(t.sub.r.pct,tr.dec||2)+" "+t.sub.r.lab;msg=`Your result ${fx(t.sub.r.pct,tr.dec||2)} ${t.sub.r.lab}; true value ${fx(tv,tr.dec||2)}; difference ${fx(er,2)} % (limit ±${tol} %). ${ok?"Good result.":"Outside the limit: review your end point, standardisation and calculation."}`}
+  t.verdict={ok,t:msg};addRec(e.id,{k:tr.k+i,sample:tr.title,res,ok});return}}
+/* ===== PREPARATION ENGINE ===== */
+function prepInit(e){const L=e.sim,v={},o={};L.reag.forEach(r=>{v[r.id]=r.def;o[r.id]=0});return{v,o,step:-1,picks:[],fac:1,log:[],weighed:null,r:rng(e.id+"p")(),msg:null,res:null}}
+function prepN(L,st){const n={};L.reag.forEach(r=>{const x=+st.v[r.id]||0,MW=r.opts?r.opts[st.o[r.id]].MW:r.MW;n[r.id]=(r.u==="mL"?x*r.conc/1000:x/MW)/r.per});return n}
+function prepTheo(L,st){const n=prepN(L,st),vals=Object.values(n),m=Math.min(...vals),lim=L.reag.find(r=>n[r.id]===m);return{m,lim,g:m*L.prod.MW,n}}
+function prepTab(e,st){const L=e.sim,th=prepTheo(L,st);let h="";
+ h+=`<table><tr><th>Reagent</th><th>Amount (mol)</th><th>Stoichiometric ratio</th><th>Moles of product possible</th></tr>${L.reag.map(r=>{const x=+st.v[r.id]||0,MW=r.opts?r.opts[st.o[r.id]].MW:r.MW,mol=r.u==="mL"?x*r.conc/1000:x/MW;return`<tr><td>${r.n.split(",")[0]}</td><td>${fx(mol,4)}</td><td>${r.per} per mol product</td><td>${fx(th.n[r.id],4)}${r.id===th.lim.id?" ← limiting":""}</td></tr>`}).join("")}</table>`;
+ h+=`<div class="rx">Theoretical yield = ${fx(th.m,4)} mol × ${L.prod.MW} g/mol = <b>${fx(th.g,2)} g</b> ${L.prod.f}</div>`;
+ return h}
+function prepHTML(e){const L=e.sim,st=S.st[e.id]||(S.st[e.id]=prepInit(e)),th=prepTheo(L,st),started=st.step>=0;
+ let h=`<div class="note"><b>Reaction:</b> ${L.eq}<br><span class="small">Product: ${L.prod.n}, ${L.prod.f} (M = ${L.prod.MW} g/mol)</span></div><h3>1. Weigh / measure the starting materials</h3>`;
+ h+=L.reag.map(r=>`<div class="row" style="margin:4px 0"><label style="min-width:230px">${r.n}${r.opts?` <select data-k="o_${r.id}" data-id="${e.id}" ${started?"disabled":""}>${r.opts.map((o,i)=>`<option value="${i}" ${st.o[r.id]==i?"selected":""}>${o.n}</option>`).join("")}</select>`:""}</label><input type="number" data-k="v_${r.id}" data-id="${e.id}" value="${st.v[r.id]}" min="${r.min}" max="${r.max}" step="0.1" ${started?"disabled":""}> ${r.u}</div>`).join("");
+ h+=`<div id="ptab">${prepTab(e,st)}</div>`;
+ if(!started)h+=`<button class="b" data-a="pstart" data-id="${e.id}">Start the preparation</button>`;
+ else{h+=`<h3>2. Carry out the preparation</h3>`;
+  L.steps.forEach((s,i)=>{if(i>st.picks.length)return;const pk=st.picks[i];
+   h+=`<div class="note"><b>Step ${i+1}.</b> ${s.q}`+(pk==null?s.o.map((o,j)=>`<button class="g opt" data-a="ppick" data-id="${e.id}" data-v="${i}:${j}">${o.t}</button>`).join(""):`<div class="${s.o[pk].ok?"okb":"badb"}" style="margin-top:6px"><b>You chose:</b> ${s.o[pk].t}<br>${s.o[pk].why}</div>`)+`</div>`});
+  if(st.picks.length===L.steps.length&&st.weighed==null)h+=`<button class="b" data-a="pweigh" data-id="${e.id}">Collect, dry and weigh the product</button>`;
+  if(st.weighed!=null){h+=`<div class="okb"><b>Observations:</b> ${L.obs}</div><h3>3. Yield</h3><p>The balance reads <b>${fx(st.weighed,2)} g</b>. Enter your recorded weight and calculate:</p><div class="row"><input type="number" step="0.01" id="pw" data-k="pw" data-id="${e.id}" value="${st.pw??fx(st.weighed,2)}"> g <button class="b" data-a="pyield" data-id="${e.id}">Calculate % yield</button></div>`;
+   if(st.res)h+=`<div class="${st.res.ok?"okb":"warn"}"><b>% yield = actual ÷ theoretical × 100 = ${fx(st.res.w,2)} ÷ ${fx(th.g,2)} × 100 = ${fx(st.res.y,1)} %</b><br>${st.res.t}</div><h3>Identification tests</h3><ul>${L.tests.map(t=>`<li>${t}</li>`).join("")}</ul>`}}
+ h+=msgH(st.msg);if(started)h+=`<div style="margin-top:8px"><button class="g" data-a="preset" data-id="${e.id}">Start again</button></div>`;return h}
+function prepAct(a,d){const e=EX(d.id),L=e.sim,st=S.st[e.id];
+ if(a==="pstart"){st.step=0;st.msg=null;return}
+ if(a==="preset"){S.st[e.id]=prepInit(e);S.st[e.id].r=Math.random();return}
+ if(a==="ppick"){const[i,j]=d.v.split(":").map(Number),o=L.steps[i].o[j];st.picks[i]=j;st.fac*=o.fac;st.step=i+1;return}
+ if(a==="pweigh"){const th=prepTheo(L,st);const q=Math.min(0.97,L.base*st.fac*(0.92+0.12*st.r));st.weighed=th.g*q;st.pw=undefined;return}
+ if(a==="pyield"){const th=prepTheo(L,st),w=parseFloat($("#pw").value);if(!(w>0))return;st.pw=w;const y=w/th.g*100,close=Math.abs(w-st.weighed)<=0.05*st.weighed+0.02;
+  st.res={w,y,ok:close&&y<=100,t:!close?"The weight you entered differs from the balance reading.":y>100?"A yield above 100 % means the product is wet or impure – dry it further.":(y>=75?"Good yield.":y>=55?"Acceptable yield; mechanical losses on transfer, filtration and washing are normal.":"Low yield. Review the choices you made in the steps.")};
+  addRec(e.id,{k:"yield",sample:L.prod.n,res:"Actual "+fx(w,2)+" g; theoretical "+fx(th.g,2)+" g; yield "+fx(y,1)+" %",ok:close&&y<=100});return}}
+
+/* ===== BENTONITE ===== */
+function bentInit(e){return{b:0,pot:0,once:false,t:null,rd:"",dec:null,msg:null}}
+function bentV(e,st){const B=e.sim.batches[st.b],f=st.once?0.85:1;return B.V*f*(1-Math.exp(-(st.t||0)/B.tau))}
+function bentHTML(e){const L=e.sim,st=S.st[e.id]||(S.st[e.id]=bentInit(e)),B=L.batches[st.b],v=bentV(e,st),done=st.pot>=20||st.once,started=st.t!==null;
+ const ySed=270-v*2.5,sedH=v*2.5,fine=done?0.85:0;
+ const svg=`<svg viewBox="0 0 200 300" width="100%" style="max-width:230px"><rect x="60" y="20" width="60" height="250" rx="4" fill="rgba(170,205,235,.35)" stroke="#889" stroke-width="2"/>${Array.from({length:11},(_,i)=>`<line x1="${120}" x2="${i%5===0?132:126}" y1="${270-i*25}" y2="${270-i*25}" stroke="#778"/><text x="136" y="${274-i*25}" font-size="10" fill="#667">${i*10}</text>`).join("")}${done&&!started?`<rect x="62" y="252" width="56" height="16" fill="#c9b28a" opacity=".9"/>`:""}${started?`<rect x="62" y="${ySed}" width="56" height="${sedH}" fill="#c9b28a" opacity=".92"/>`:""}<text x="90" y="290" text-anchor="middle" font-size="11" fill="#667">100 mL cylinder</text></svg>`;
+ let h=`<div class="row"><span class="small mut">Batch:</span>${L.batches.map((x,i)=>`<button class="${i===st.b?"b":"g"}" data-a="bbatch" data-id="${e.id}" data-v="${i}" ${st.pot>0||st.once?"disabled":""}>${x.n}</button>`).join("")}</div><div class="grid2"><div>${svg}</div><div>`;
+ h+=`<p>100 mL of water is in the cylinder. Add <b>2 g</b> of bentonite (${st.once?"all at once":st.pot*0.1>0?fx(st.pot*0.1,1)+" g added":"none added"}).</p>`;
+ if(!done){h+=`<div class="row"><button class="b" data-a="bpot" data-id="${e.id}" data-v="1">Add 0.1 g portion (let it settle)</button><button class="g" data-a="bpot" data-id="${e.id}" data-v="5">Add 5 portions</button><button class="g" data-a="bonce" data-id="${e.id}">Pour all 2 g at once</button></div><div class="pb" style="margin:8px 0"><i style="width:${st.pot*5}%"></i></div>`}
+ else if(!started)h+=`<button class="b" data-a="bstart" data-id="${e.id}">Stopper the cylinder and start the 2 h timer</button>${st.once?`<div class="warn">You added the powder all at once. Lumps formed that will not hydrate fully.</div>`:""}`;
+ else{h+=`<p>Time: <b>${st.t} min</b> of 120 min</p><div class="row"><button class="g" data-a="btime" data-id="${e.id}" data-v="10">+10 min</button><button class="g" data-a="btime" data-id="${e.id}" data-v="30">+30 min</button><button class="g" data-a="btime" data-id="${e.id}" data-v="120">Jump to 2 h</button></div>`;
+  if(st.t>=120&&st.dec===null)h+=`<h3>Read the volume of the swollen sediment</h3><div class="row"><input type="number" step="0.5" data-k="rd" data-id="${e.id}" value="${st.rd}" placeholder="mL"> mL <button class="b" data-a="bdec" data-id="${e.id}" data-v="pass">Complies (≥ 24 mL)</button><button class="g" data-a="bdec" data-id="${e.id}" data-v="fail">Does not comply (&lt; 24 mL)</button></div>`;
+  if(st.dec!==null){const tv=bentV(e,st),ok=(st.dec==="pass")===(tv>=24);h+=`<div class="${ok?"okb":"badb"}"><b>${ok?"Correct.":"Incorrect."}</b> The true swollen volume after 2 h was <b>${fx(tv,1)} mL</b> – ${tv>=24?"complies (≥ 24 mL)":"does not comply (< 24 mL)"}. You read ${st.rd||"–"} mL.</div><button class="g" data-a="breset" data-id="${e.id}">Test another batch</button>`}}
+ return h+msgH(st.msg)+`</div></div>`}
+function bentAct(a,d){const e=EX(d.id),st=S.st[e.id];
+ if(a==="bbatch")st.b=+d.v;if(a==="bpot")st.pot=Math.min(20,st.pot+ +d.v);if(a==="bonce")st.once=true;if(a==="bstart")st.t=0;if(a==="btime")st.t=Math.min(120,st.t+ +d.v);
+ if(a==="breset"){S.st[e.id]=Object.assign(bentInit(e),{b:(st.b+1)%e.sim.batches.length});return}
+ if(a==="bdec"){st.dec=d.v;const tv=bentV(e,st),rd=parseFloat(st.rd);addRec(e.id,{k:"b"+st.b,sample:e.sim.batches[st.b].n,res:"Swollen volume "+(isNaN(rd)?"–":fx(rd,1))+" mL (true "+fx(tv,1)+") → "+(tv>=24?"complies":"does not comply"),ok:(d.v==="pass")===(tv>=24)})}}
+
+/* ===== ANC ===== */
+function ancInit(){return{b:0,w:5,step:0,V:0,off:0,pts:[],rd:null,msg:null,sub:null}}
+function ancTrue(e,st){const B=e.sim.samples[st.b];const exp=st.w*1000*B.pct/100*0.0385;return{exp,anc:Math.min(30,exp*B.eff)}}
+function ancPH(e,st){const{anc}=ancTrue(e,st),E=30-anc,N=st.V*0.5,Vt=70+30+st.V,x=(E-N)/Vt;if(x>1e-10)return -Math.log10(x);const y=(N-E)/Vt;return y>1e-10?14+Math.log10(y):7}
+function ancHTML(e){const L=e.sim,st=S.st[e.id]||(S.st[e.id]=ancInit()),pH=st.step>=2?ancPH(e,st):null;
+ let h=`<div class="row"><span class="small mut">Batch:</span>${L.samples.map((x,i)=>`<button class="${i===st.b?"b":"g"}" data-a="abatch" data-id="${e.id}" data-v="${i}" ${st.step>0?"disabled":""}>${x.n}</button>`).join("")}<label>Gel weighed (g) <input type="number" step="0.1" min="2" max="8" value="${st.w}" data-k="aw" data-id="${e.id}" ${st.step>0?"disabled":""}></label></div><div class="small mut">Each gram of this gel contains about ${L.samples[st.b].pct} % Al(OH)₃.</div>`;
+ h+=`<ol class="steps"><li class="${st.step>0?"done":""}">Transfer the gel to a beaker with about 70 mL water; stir 1 min. ${st.step===0?`<button class="b" data-a="astep" data-id="${e.id}">Do this</button>`:""}</li><li class="${st.step>1?"done":""}">Add exactly 30.0 mL of 1.0 N HCl; stir for exactly 15 min at 37 °C. ${st.step===1?`<button class="b" data-a="astep" data-id="${e.id}">Do this</button>`:""}</li><li>Titrate the excess HCl with 0.5 N NaOH to a stable pH 3.5 (finish within 5 min).</li></ol>`;
+ if(st.step>=2){const pts=st.pts.concat([{V:st.V,pH}]),px=v=>30+v/60*230,py=p=>130-Math.max(0,Math.min(14,p))*8.6;
+  h+=`<div class="grid2"><div><div class="big">pH ${fx(pH,2)}</div><div class="small mut">NaOH delivered: ${fx(st.V,2)} mL (burette ${fx(Math.max(0,st.V-st.off),2)} mL)</div><div class="row" style="margin:8px 0"><button class="g" data-a="aadd" data-id="${e.id}" data-v="10">+10</button><button class="g" data-a="aadd" data-id="${e.id}" data-v="1">+1</button><button class="g" data-a="aadd" data-id="${e.id}" data-v="0.2">+0.2</button><button class="g" data-a="aadd" data-id="${e.id}" data-v="0.05">1 drop</button><button class="g" data-a="aadd" data-id="${e.id}" data-v="0.02">+0.02</button></div><div class="row"><button class="g" data-a="aref" data-id="${e.id}">Refill burette</button><button class="b" data-a="arec" data-id="${e.id}">Record: pH 3.5 reached</button><button class="g" data-a="areset" data-id="${e.id}">New titration</button></div></div><svg viewBox="0 0 280 150" width="100%" style="max-width:320px"><rect x="30" y="${py(14)}" width="230" height="${py(0)-py(14)}" fill="none" stroke="#99a"/>${[0,3.5,7,14].map(p=>`<text x="26" y="${py(p)+3}" text-anchor="end" font-size="9" fill="#667">${p}</text><line x1="30" x2="260" y1="${py(p)}" y2="${py(p)}" stroke="#aab" stroke-dasharray="${p===3.5?"3 3":"1 4"}"/>`).join("")}<polyline fill="none" stroke="#0f766e" stroke-width="2" points="${pts.map(q=>px(q.V)+","+py(q.pH)).join(" ")}"/><text x="145" y="146" text-anchor="middle" font-size="10" fill="#667">NaOH (mL)</text></svg></div>`}
+ if(st.sub){const s=st.sub;h+=`<h3>Calculation</h3><div class="rx">ANC = (30.0 × 1.0) − (${fx(st.V,2)} × 0.5) = <b>${fx(s.mEq,2)} mEq</b> in ${st.w} g → <b>${fx(s.perG,2)} mEq per g</b><br>Expected for the Al(OH)₃ present = ${fx(s.exp,2)} mEq (0.0385 mEq/mg) → found = <b>${fx(s.pct,1)} %</b> of expected</div><div class="${s.pct>=65?"okb":"badb"}">${s.pct>=65?"Complies: not less than 65 % of the expected acid-neutralizing capacity.":"Does not comply: less than 65 % of the expected capacity."}</div>`+(s.warn?`<div class="warn">${s.warn}</div>`:"")}
+ return h+msgH(st.msg)}
+function ancAct(a,d){const e=EX(d.id),st=S.st[e.id];
+ if(a==="abatch")st.b=+d.v;if(a==="astep")st.step++;
+ if(a==="aadd"){if(st.V-st.off+ +d.v>50.001){st.msg={c:"warn",t:"Burette would overflow: refill first."};return}st.pts.push({V:st.V,pH:ancPH(e,st)});st.V=Math.round((st.V+ +d.v)*100)/100;st.msg=null}
+ if(a==="aref"){st.off=st.V;st.msg={c:"note",t:"Burette refilled."}}
+ if(a==="areset"){S.st[e.id]=Object.assign(ancInit(),{b:st.b,w:st.w,step:2});return}
+ if(a==="arec"){const pH=ancPH(e,st);if(pH<3.3||pH>3.8){st.msg={c:"warn",t:"The pH meter reads "+fx(pH,2)+" – not at pH 3.5. Continue (or start a new titration if you overshot)."};return}
+  const t=ancTrue(e,st),mEq=30-st.V*0.5,pct=mEq/t.exp*100;st.sub={mEq,perG:mEq/st.w,exp:t.exp,pct,warn:Math.abs(pH-3.5)>0.15?"Your end point was at pH "+fx(pH,2)+", slightly off 3.5.":""};st.msg=null;
+  addRec(e.id,{k:"anc",sample:e.sim.samples[st.b].n,res:fx(mEq/st.w,2)+" mEq/g = "+fx(pct,1)+" % of expected",ok:pct>=65===(t.anc/t.exp>=0.65)})}}
+/* ===== UI ===== */
+S.vv={};S.dl=null;
+const COS=[["CO1","Perform limit tests to detect and identify impurities in pharmaceutical substances.",["L"]],["CO2","Prepare various pharmaceutical inorganic compounds following standard procedures.",["P"]],["CO3","Analyze the significance of quality control in pharmaceutical products and raw materials.",["L","T"]],["CO4","Demonstrate proficiency in titrimetric analysis using different volumetric techniques.",["A","T"]],["CO5","Competence in applying analytical skills to qualitative and quantitative data.",["L","P","T","A"]]];
+function navH(){let h=`<button class="${!S.sel&&S.tab!=="rec"?"on":""}" data-a="ui_home">🏠 Course home</button>`;
+ UNITS.forEach(u=>{const ex=EXPS.filter(e=>e.u===u.n),d=ex.filter(e=>S.done[e.id]).length;h+=`<h4>Unit ${u.n} · ${u.t} (${u.sub}) · ${d}/${ex.length}</h4>`+ex.map(e=>`<button class="${S.sel===e.id?"on":""}" data-a="ui_go" data-v="${e.id}"><span class="dot ${S.done[e.id]?"d":""}"></span>${e.t}</button>`).join("")});
+ return h+`<h4>Practical record</h4><button class="${S.tab==="rec"&&!S.sel?"on":""}" data-a="ui_rec">📒 My record (${S.rec.length})</button>`}
+function homeH(){const tot=UNITS.reduce((s,u)=>s+u.need,0),dn=UNITS.reduce((s,u)=>s+Math.min(u.need,EXPS.filter(e=>e.u===u.n&&S.done[e.id]).length),0);
+ return`<div class="card"><h2>BP111P – Pharmaceutical Inorganic and Analytical Chemistry (Practical)</h2><div><span class="chip">Core</span><span class="chip">Credit 1</span><span class="chip">L–T–P: – – 3 h/week</span><span class="chip">Max. 45 hours</span><span class="chip">Max. marks 50 (SE 20 · ESE 30)</span></div>
+ <p>A virtual laboratory for the B.Pharm practical syllabus. Each experiment has the aim, theory with the real reactions, the procedure, an interactive simulation with calculations, a short viva and an entry in your practical record. The chemistry (molar masses, stoichiometry, equivalence factors, indicator colour changes) is real; the unknown sample values are randomised, so every student gets a different answer.</p>
+ <h3>Course objectives</h3><ol><li>Gain practical knowledge on various volumetric titration techniques.</li><li>Learn the principles of volumetric analysis.</li><li>Study the preparation and assessment of inorganic compounds.</li><li>Determine the assay of various inorganic compounds in pharmaceutical use.</li><li>Develop analytical skill for the qualitative and quantitative analysis of various inorganic compounds.</li></ol>
+ <h3>Course outcomes and where to practise them</h3><table><tr><th>CO</th><th>Upon completion, the student will be able to…</th><th>Experiments</th></tr>${COS.map(c=>`<tr><td>${c[0]}</td><td>${c[1]}</td><td>${EXPS.filter(e=>c[2].includes(e.id[0])).map(e=>`<a href="#" data-a="ui_go" data-v="${e.id}" style="color:var(--ac)">${e.id}</a>`).join(" ")}</td></tr>`).join("")}</table></div>
+ <div class="card"><h2>Syllabus and your progress</h2><div class="pb" style="margin:6px 0 12px"><i style="width:${dn/tot*100}%"></i></div><p class="small mut">${dn} of ${tot} required experiments completed (the syllabus asks for the minimum numbers shown below).</p>`+UNITS.map(u=>{const ex=EXPS.filter(e=>e.u===u.n);return`<h3>${u.n}. ${u.t} <span class="chip">${u.sub}</span></h3><ul>${ex.map(e=>`<li><a href="#" data-a="ui_go" data-v="${e.id}" style="color:var(--ac)">${e.t}</a>${S.done[e.id]?" ✅":""}</li>`).join("")}</ul>`}).join("")+`<h3>Recommended references</h3><ul class="small">${REFS.map(r=>`<li>${r}</li>`).join("")}</ul>
+ <div class="note small">Reagent strengths, volumes and limits follow standard IP-based practical manuals and the pharmacopoeial texts consulted while building this lab (IP-style limit tests; USP monographs for bentonite, ANC, calcium gluconate and sodium benzoate). Always check the current edition of the Indian Pharmacopoeia and your institute's manual before using a value in an examination. This lab prepares you for the bench; it does not replace hands-on work.</div></div>`}
+function tabsH(e){const T=[["aim","Aim"],["theory","Theory"],["proc","Procedure"],["sim","Simulation"],["viva","Viva"]];return`<div class="tabs">${T.map(t=>`<button class="${S.tab===t[0]?"on":""}" data-a="ui_tab" data-v="${t[0]}">${t[1]}</button>`).join("")}</div>`}
+function vivaH(e){const a=S.vv[e.id]||(S.vv[e.id]=[]);let sc=0;const h=e.viva.map((q,i)=>{const p=a[i],ans=p!=null;if(ans&&p===q.a)sc++;return`<div class="note"><b>${i+1}. ${q.q}</b>${q.o.map((o,j)=>`<button class="${ans&&j===q.a?"b":"g"} opt" data-a="ui_viva" data-v="${i}:${j}" ${ans?"disabled":""}>${o}${ans&&p===j?(j===q.a?" ✓":" ✗"):""}</button>`).join("")}${ans?`<div class="${p===q.a?"okb":"badb"}">${p===q.a?"Correct. ":"Not quite. "}${q.e}</div>`:""}</div>`}).join("");return h+`<p class="mut">Score: ${sc} / ${e.viva.length}</p>`}
+function expH(e){let h=`<div class="card"><h2>${e.id} · ${e.t}</h2><div><span class="chip">Unit ${e.u}</span></div>${tabsH(e)}`;
+ if(S.tab==="aim")h+=`<h3>Aim</h3><p>${e.aim}</p><h3>Requirements</h3><p>${e.req}</p>`;
+ else if(S.tab==="theory")h+=e.th;
+ else if(S.tab==="proc")h+=`<h3>Procedure</h3><ol class="steps">${e.steps.map(s=>`<li>${s}</li>`).join("")}</ol><div class="note">Go to the <b>Simulation</b> tab to perform it.</div>`;
+ else if(S.tab==="viva")h+=vivaH(e);
+ else{const k=e.sim.kind;h+=`<div class="sim">${k==="limit"?limHTML(e):k==="titr"?titHTML(e):k==="prep"?prepHTML(e):k==="bent"?bentHTML(e):ancHTML(e)}</div>`}
+ return h+`</div>`}
+function recH(){const nm=S.name||"(enter your name above)",rl=S.roll||"";let h=`<div class="card"><h2>Practical record</h2><p>Student: <b>${nm}</b> ${rl?"· Roll no. <b>"+rl+"</b>":""}</p>`;
+ if(!S.rec.length)h+=`<p class="mut">Nothing recorded yet. Complete an experiment's simulation and it is entered here automatically.</p>`;
+ else h+=`<table><tr><th>Experiment</th><th>Item</th><th>Result</th><th></th></tr>${S.rec.slice().sort((a,b)=>a.u-b.u||(a.id<b.id?-1:1)).map(r=>`<tr><td>${r.id} · ${r.title}</td><td>${r.sample}</td><td>${r.res}</td><td>${r.ok?"✓":"✗"}</td></tr>`).join("")}</table>`;
+ h+=`<h3>Syllabus requirement</h3><table><tr><th>Unit</th><th>Required</th><th>Completed</th></tr>${UNITS.map(u=>{const d=EXPS.filter(e=>e.u===u.n&&S.done[e.id]).length;return`<tr><td>${u.n}. ${u.t}</td><td>${u.sub}</td><td>${d} ${d>=u.need?"✅":""}</td></tr>`}).join("")}</table>`;
+ if(S.dl)h+=`<div class="row" style="margin-top:12px"><button class="b" data-a="ui_dl" data-v="html">⬇ Download record (HTML)</button><button class="g" data-a="ui_dl" data-v="csv">⬇ Download (CSV)</button></div>`;
+ else h+=`<p class="small mut">Downloads are available when this page is opened inside claude.ai.</p>`;return h+`</div>`}
+function render(){$("#nav").innerHTML=navH();const m=$("#main");m.innerHTML=S.sel?expH(EX(S.sel)):(S.tab==="rec"?recH():homeH())}
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+async function dl(kind){if(!S.dl)return;const d=new Date().toLocaleDateString("en-IN"),rows=S.rec.slice().sort((a,b)=>a.u-b.u||(a.id<b.id?-1:1));
+ try{if(kind==="csv"){const q=s=>'"'+String(s).replace(/"/g,'""')+'"';await S.dl.save({filename:"bp111p-record.csv",data:["Unit,Experiment,Item,Result,Correct"].concat(rows.map(r=>[r.u,q(r.id+" "+r.title),q(r.sample),q(r.res),r.ok?"yes":"no"].join(","))).join("\n")})}
+ else await S.dl.save({filename:"bp111p-record.html",data:`<!doctype html><meta charset="utf-8"><title>BP111P practical record</title><style>body{font:14px system-ui;margin:30px}table{border-collapse:collapse;width:100%}td,th{border:1px solid #bbb;padding:6px 8px;text-align:left}th{background:#e4f2ef}</style><h2>BP111P Pharmaceutical Inorganic and Analytical Chemistry (Practical): record</h2><p>Student: ${esc(S.name||"")} &nbsp; Roll no.: ${esc(S.roll||"")} &nbsp; Date: ${d}</p><table><tr><th>Unit</th><th>Experiment</th><th>Item</th><th>Result</th><th>OK</th></tr>${rows.map(r=>`<tr><td>${r.u}</td><td>${esc(r.id+" "+r.title)}</td><td>${esc(r.sample)}</td><td>${esc(r.res)}</td><td>${r.ok?"✓":"✗"}</td></tr>`).join("")}</table><p style="margin-top:30px">Signature of teacher: ____________________</p>`})}catch(x){}}
+/* ===== EVENTS ===== */
+const R=(re,f)=>({re,f});
+const ROUTES=[R(/^l/,limAct),R(/^t/,tAct),R(/^p/,prepAct),R(/^b/,bentAct),R(/^a/,ancAct)];
+document.addEventListener("click",ev=>{const b=ev.target.closest("[data-a]");if(!b||b.disabled)return;ev.preventDefault();const a=b.dataset.a,d=b.dataset;
+ if(a==="ui_home"){S.sel=null;S.tab="home"}else if(a==="ui_rec"){S.sel=null;S.tab="rec"}else if(a==="ui_go"){S.sel=d.v;S.tab="aim";window.scrollTo(0,0)}else if(a==="ui_tab")S.tab=d.v;
+ else if(a==="ui_viva"){const[i,j]=d.v.split(":").map(Number),x=S.vv[S.sel]||(S.vv[S.sel]=[]);x[i]=j}else if(a==="ui_dl"){dl(d.v);return}
+ else{const r=ROUTES.find(x=>x.re.test(a));if(r)r.f(a,d)}
+ render()});
+function setIn(el){const k=el.dataset.k,id=el.dataset.id;if(!k||!id)return;const e=EX(id),v=parseFloat(el.value);
+ if(k==="w"){SIMS(e).w=v}else if(k==="a"||k==="b"){tst(e,SIMS(e).ti||0)[k]=v}else if(k==="rd"){S.st[id].rd=el.value}else if(k==="aw"){S.st[id].w=v}
+ else if(k.startsWith("v_")||k.startsWith("o_")){const st=S.st[id],r=k.slice(2);if(k[0]==="v")st.v[r]=v;else st.o[r]=+el.value;const t=$("#ptab");if(t)t.innerHTML=prepTab(e,st)}}
+document.addEventListener("input",ev=>setIn(ev.target));document.addEventListener("change",ev=>setIn(ev.target));
+$("#nm").addEventListener("input",e=>{S.name=e.target.value});$("#rl").addEventListener("input",e=>{S.roll=e.target.value});
+try{window.claude&&Promise.resolve(claude.use("downloads")).then(d=>{S.dl=d;if(S.tab==="rec"&&!S.sel)render()}).catch(()=>{})}catch(x){}
+render();
+</script>
+
+
